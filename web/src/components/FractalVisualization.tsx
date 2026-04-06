@@ -22,6 +22,10 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { GROUPS, TOTAL, NUM_GROUPS, type LetterGroup } from '@/lib/groups';
+import { FlowField } from '@/lib/perlin';
+import { useAudioAnalyzer, audioToVisual, type AudioData } from '@/hooks/useAudioAnalyzer';
+import { AnimationController } from '@/lib/animationController';
+import { gradientCache } from '@/lib/gradientCache';
 
 type ViewMode = 'mandala' | 'fractal' | 'constellation' | 'flow';
 
@@ -106,6 +110,21 @@ export default function FractalVisualization({
 
   const [currentView, setCurrentView] = useState<ViewMode>(initialView);
   const [selectedGroup, setSelectedGroup] = useState<LetterGroup | null>(null);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+
+  // Advanced animation and effects modules
+  const flowFieldRef = useRef<FlowField>(new FlowField(0.003, 0.0003));
+  const animControllerRef = useRef<AnimationController | null>(null);
+  const audioDataRef = useRef<AudioData | null>(null);
+
+  // Audio analyzer hook
+  const {
+    isActive: audioActive,
+    hasPermission: audioPermission,
+    start: startAudio,
+    stop: stopAudio,
+    getData: getAudioData,
+  } = useAudioAnalyzer();
 
   function resetParticle(p: Particle, state: typeof stateRef.current) {
     // Chromatic color selection for mystical effect
@@ -321,6 +340,44 @@ export default function FractalVisualization({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [computeTargetPositions]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const views: ViewMode[] = ['mandala', 'fractal', 'constellation', 'flow'];
+      const key = e.key;
+
+      // Number keys 1-4 for direct view selection
+      if (key >= '1' && key <= '4') {
+        e.preventDefault();
+        const index = parseInt(key) - 1;
+        switchView(views[index]);
+      }
+      // Arrow keys for cycling
+      else if (key === 'ArrowRight' || key === 'ArrowDown') {
+        e.preventDefault();
+        const currentIndex = views.indexOf(stateRef.current.currentView);
+        const nextIndex = (currentIndex + 1) % views.length;
+        switchView(views[nextIndex]);
+      }
+      else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+        e.preventDefault();
+        const currentIndex = views.indexOf(stateRef.current.currentView);
+        const prevIndex = (currentIndex - 1 + views.length) % views.length;
+        switchView(views[prevIndex]);
+      }
+      // Escape to clear selection
+      else if (key === 'Escape') {
+        stateRef.current.lockedGroup = null;
+        stateRef.current.hoveredGroup = null;
+        setSelectedGroup(null);
+        onGroupSelect?.(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [switchView, onGroupSelect]);
 
   // Animation loop
   useEffect(() => {
@@ -1111,6 +1168,44 @@ export default function FractalVisualization({
     }
   }, [onGroupSelect]);
 
+  // Touch handlers for mobile support
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = touch.clientX - rect.left;
+      const my = touch.clientY - rect.top;
+      const touched = getGroupAtPoint(mx, my);
+
+      if (touched !== null) {
+        const wasLocked = stateRef.current.lockedGroup === touched;
+        stateRef.current.lockedGroup = wasLocked ? null : touched;
+        const group = wasLocked ? null : GROUPS[touched];
+        setSelectedGroup(group);
+        onGroupSelect?.(group);
+      } else {
+        stateRef.current.lockedGroup = null;
+        setSelectedGroup(null);
+        onGroupSelect?.(null);
+      }
+    }
+  }, [getGroupAtPoint, onGroupSelect]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = touch.clientX - rect.left;
+      const my = touch.clientY - rect.top;
+      const hovered = getGroupAtPoint(mx, my);
+      stateRef.current.hoveredGroup = hovered;
+    }
+  }, [getGroupAtPoint]);
+
   return (
     <div className={`relative flex flex-col h-full bg-[#0a0a12] ${className}`}>
       {showControls && (
@@ -1142,10 +1237,12 @@ export default function FractalVisualization({
       <div ref={containerRef} className="flex-1 relative overflow-hidden">
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full touch-none"
           onMouseMove={handleMouseMove}
           onClick={handleClick}
           onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
         />
         <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 
