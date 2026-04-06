@@ -116,6 +116,7 @@ export default function FractalVisualization({
   const flowFieldRef = useRef<FlowField>(new FlowField(0.003, 0.0003));
   const animControllerRef = useRef<AnimationController | null>(null);
   const audioDataRef = useRef<AudioData | null>(null);
+  const audioStateRef = useRef({ enabled: false, active: false });
 
   // Audio analyzer hook
   const {
@@ -125,6 +126,17 @@ export default function FractalVisualization({
     stop: stopAudio,
     getData: getAudioData,
   } = useAudioAnalyzer();
+
+  // Sync audio state to ref for animation loop access
+  useEffect(() => {
+    audioStateRef.current = { enabled: audioEnabled, active: audioActive };
+  }, [audioEnabled, audioActive]);
+
+  // Store getAudioData in a ref for animation loop
+  const getAudioDataRef = useRef(getAudioData);
+  useEffect(() => {
+    getAudioDataRef.current = getAudioData;
+  }, [getAudioData]);
 
   function resetParticle(p: Particle, state: typeof stateRef.current) {
     // Chromatic color selection for mystical effect
@@ -1008,14 +1020,47 @@ export default function FractalVisualization({
 
     const updateParticles = () => {
       const state = stateRef.current;
+      const flowField = flowFieldRef.current;
+      const audio = audioDataRef.current;
+
+      // Audio modifiers (default to 1 if no audio)
+      const audioMod = audio ? {
+        size: audioToVisual.glowIntensity(audio),
+        speed: audioToVisual.rotationMultiplier(audio),
+      } : { size: 1, speed: 1 };
+
       particlesRef.current.forEach(p => {
+        // Get flow field force for organic motion
+        const force = flowField.getForce(p.x, p.y, state.animTime);
+
         if (p.mode === 'spiral' && p.angle !== undefined && p.angleSpeed !== undefined && p.dist !== undefined) {
-          // Spiral mode: helical path
-          p.angle += p.angleSpeed;
-          p.dist += 0.05; // Slowly expand outward
+          // Spiral mode: helical path with noise perturbation
+          p.angle += p.angleSpeed * audioMod.speed + force.fx * 0.01;
+          p.dist += 0.05 + force.fy * 0.02;
           p.x = state.cx + Math.cos(p.angle) * p.dist;
           p.y = state.cy + Math.sin(p.angle) * p.dist;
+        } else if (p.mode === 'nebula') {
+          // Nebula: slow drift with strong flow field influence
+          p.vx = p.vx * 0.98 + force.fx * 0.08;
+          p.vy = p.vy * 0.98 + force.fy * 0.08;
+          p.x += p.vx;
+          p.y += p.vy;
+        } else if (p.mode === 'orbital') {
+          // Orbital: circular with subtle flow influence
+          p.vx += force.fx * 0.02;
+          p.vy += force.fy * 0.02;
+          // Damping to maintain orbital nature
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > 1.5) {
+            p.vx *= 1.5 / speed;
+            p.vy *= 1.5 / speed;
+          }
+          p.x += p.vx * audioMod.speed;
+          p.y += p.vy * audioMod.speed;
         } else {
+          // Default: standard motion with subtle flow
+          p.vx += force.fx * 0.01;
+          p.vy += force.fy * 0.01;
           p.x += p.vx;
           p.y += p.vy;
         }
@@ -1053,6 +1098,14 @@ export default function FractalVisualization({
     const frame = () => {
       const state = stateRef.current;
       state.animTime++;
+
+      // Update audio data if audio is active (using refs to avoid stale closures)
+      const audioState = audioStateRef.current;
+      if (audioState.enabled && audioState.active) {
+        audioDataRef.current = getAudioDataRef.current();
+      } else {
+        audioDataRef.current = null;
+      }
 
       // Transition animation
       if (state.transitionProgress < 1) {
@@ -1230,6 +1283,36 @@ export default function FractalVisualization({
                 {view.charAt(0).toUpperCase() + view.slice(1)}
               </button>
             ))}
+            <div className="w-px h-6 bg-amber-500/20 mx-1" />
+            {/* Audio toggle button */}
+            <button
+              onClick={() => {
+                if (audioEnabled) {
+                  stopAudio();
+                  setAudioEnabled(false);
+                } else {
+                  startAudio();
+                  setAudioEnabled(true);
+                }
+              }}
+              className={`px-3 py-2 text-sm rounded-md border transition-all flex items-center gap-1 ${
+                audioEnabled && audioActive
+                  ? 'bg-cyan-500/30 border-cyan-400 text-cyan-400 shadow-lg shadow-cyan-500/20'
+                  : 'bg-gray-500/10 border-gray-500/30 text-gray-400 hover:bg-gray-500/20'
+              }`}
+              title={audioEnabled ? 'Disable audio reactivity' : 'Enable audio reactivity (microphone)'}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {audioEnabled && audioActive ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                )}
+              </svg>
+              <span className="hidden sm:inline">{audioEnabled ? 'Audio On' : 'Audio'}</span>
+            </button>
           </div>
         </div>
       )}
