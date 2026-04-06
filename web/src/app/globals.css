@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a12;
+  --foreground: #e0dcd0;
+  --gold: #c9a84c;
+  --gold-light: #f5d060;
+  --teal: #60f5e0;
+  --teal-dark: #17a2b8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-teal: var(--teal);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Arabic text styling */
+.arabic {
+  font-family: 'Amiri', serif;
+  direction: rtl;
+}
+
+/* Glow effects */
+.glow-gold {
+  text-shadow: 0 0 15px rgba(201, 168, 76, 0.6), 0 0 30px rgba(201, 168, 76, 0.2);
+}
+
+.glow-teal {
+  text-shadow: 0 0 15px rgba(96, 245, 224, 0.6), 0 0 30px rgba(96, 245, 224, 0.2);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(201, 168, 76, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.5);
+}
+
+/* Selection */
+::selection {
+  background: rgba(201, 168, 76, 0.3);
+  color: #fff;
+}

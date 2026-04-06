@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7430 Project — Quran Fractal Visualization</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#e0dcd0;font-family:'Inter',sans-serif;overflow:hidden;height:100vh;width:100vw}
+#app{display:flex;flex-direction:column;height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,18,0.95);border-bottom:1px solid rgba(201,168,76,0.2);z-index:10;flex-shrink:0}
+.header-left h1{font-size:1.3rem;font-weight:600;color:#c9a84c;letter-spacing:0.5px}
+.header-left p{font-size:0.75rem;color:#888;margin-top:2px}
+.view-buttons{display:flex;gap:6px}
+.view-btn{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:'Inter',sans-serif;transition:all 0.3s}
+.view-btn:hover{background:rgba(201,168,76,0.2)}
+.view-btn.active{background:rgba(201,168,76,0.3);border-color:#c9a84c;box-shadow:0 0 12px rgba(201,168,76,0.3)}
+.export-btn{background:rgba(23,162,184,0.15);border:1px solid rgba(23,162,184,0.4);color:#17a2b8;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:'Inter',sans-serif;transition:all 0.3s}
+.export-btn:hover{background:rgba(23,162,184,0.3)}
+main{flex:1;position:relative;overflow:hidden}
+canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+#labelOverlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+#infoPanel{position:absolute;top:16px;right:16px;width:280px;background:rgba(10,10,18,0.92);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:20px;backdrop-filter:blur(12px);opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:5}
+#infoPanel.visible{opacity:1;pointer-events:auto}
+#infoPanel .arabic-name{font-family:'Amiri',serif;font-size:2.2rem;color:#c9a84c;text-align:center;direction:rtl;text-shadow:0 0 20px rgba(201,168,76,0.5),0 0 40px rgba(201,168,76,0.2);margin-bottom:8px}
+#infoPanel .latin-name{font-size:1rem;font-weight:600;color:#e0dcd0;text-align:center;margin-bottom:12px}
+#infoPanel .detail{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.82rem}
+#infoPanel .detail-label{color:#888}
+#infoPanel .detail-value{color:#e0dcd0;font-weight:600}
+#infoPanel .tier-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;margin-top:8px}
+.tier-1{background:rgba(212,160,23,0.2);color:#f5d060;border:1px solid rgba(212,160,23,0.4)}
+.tier-2{background:rgba(23,162,184,0.2);color:#60f5e0;border:1px solid rgba(23,162,184,0.4)}
+footer{padding:10px 24px;text-align:center;font-size:0.72rem;color:#555;border-top:1px solid rgba(201,168,76,0.1);flex-shrink:0;background:rgba(10,10,18,0.95)}
+footer a{color:#c9a84c;text-decoration:none}
+footer .formula{color:#c9a84c;font-weight:600;font-size:0.85rem;margin-bottom:2px}
+@media(max-width:768px){
+header{flex-direction:column;gap:8px;padding:10px 16px}
+.view-buttons{flex-wrap:wrap;justify-content:center}
+#infoPanel{width:calc(100% - 32px);top:auto;bottom:16px;right:16px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+<div class="header-left">
+<h1>7430 Project — Quran Fractal</h1>
+<p>Mathematical patterns in the Muqatta'at</p>
+</div>
+<div class="view-buttons">
+<button class="view-btn active" data-view="mandala" onclick="switchView('mandala')">Mandala</button>
+<button class="view-btn" data-view="fractal" onclick="switchView('fractal')">Fractal</button>
+<button class="view-btn" data-view="constellation" onclick="switchView('constellation')">Constellation</button>
+<button class="view-btn" data-view="flow" onclick="switchView('flow')">Flow</button>
+</div>
+<button class="export-btn" onclick="exportPNG()">Export PNG</button>
+</header>
+<main>
+<canvas id="mainCanvas"></canvas>
+<svg id="labelOverlay" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="infoPanel">
+<div class="arabic-name" id="panelArabic"></div>
+<div class="latin-name" id="panelLatin"></div>
+<div class="detail"><span class="detail-label">Chapters</span><span class="detail-value" id="panelChapters"></span></div>
+<div class="detail"><span class="detail-label">Letter Count</span><span class="detail-value" id="panelCount"></span></div>
+<div class="detail"><span class="detail-label">÷ 19</span><span class="detail-value" id="panelDiv19"></span></div>
+<div class="detail"><span class="detail-label">Proportion</span><span class="detail-value" id="panelProportion"></span></div>
+<div style="text-align:center"><span class="tier-badge" id="panelTier"></span></div>
+</div>
+</main>
+<footer>
+<div class="formula">39,349 = 19² × P(29) — "Don't believe me. Count."</div>
+<a href="https://github.com/7430project/quran-fractal" target="_blank">github.com/7430project/quran-fractal</a> · Data: Tanzil.net (CC-BY 3.0)
+</footer>
+</div>
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const GROUPS = Object.freeze([
+  {id:0,latin:'ALM',arabic:'الم',chapters:[2,3,29,30,31,32],count:18012,div19:948,tier:1},
+  {id:1,latin:'ALR',arabic:'الر',chapters:[10,11,12,14,15],count:7828,div19:412,tier:2},
+  {id:2,latin:'ALMR',arabic:'المر',chapters:[13],count:1178,div19:62,tier:2},
+  {id:3,latin:'ALMS',arabic:'المص',chapters:[7,38],count:4997,div19:263,tier:1},
+  {id:4,latin:'HM',arabic:'حم',chapters:[40,41,42,43,44,45,46],count:2147,div19:113,tier:1},
+  {id:5,latin:'ASQ',arabic:'عسق',chapters:[42],count:209,div19:11,tier:1},
+  {id:6,latin:'Q',arabic:'ق',chapters:[50],count:57,div19:3,tier:1},
+  {id:7,latin:'KHYAS',arabic:'كهيعص',chapters:[19],count:798,div19:42,tier:1},
+  {id:8,latin:'TSM',arabic:'طسم',chapters:[26,28],count:1178,div19:62,tier:1},
+  {id:9,latin:'YS',arabic:'يس',chapters:[36],count:285,div19:15,tier:1},
+  {id:10,latin:'N',arabic:'ن',chapters:[68],count:361,div19:19,tier:2},
+  {id:11,latin:'TH',arabic:'طه',chapters:[20],count:1292,div19:68,tier:2},
+  {id:12,latin:'TS',arabic:'طس',chapters:[27],count:1007,div19:53,tier:2}
+]);
+const TOTAL = 39349;
+const FACTOR_19SQ = 361;
+const PRIME_29 = 109;
+const NUM_CHAPTERS = 29;
+const NUM_GROUPS = 13;
+const TAU = Math.PI * 2;
+
+// Colors
+function groupColor(g, alpha=1) {
+  if (g.tier === 1) {
+    const hue = 35 + (g.id / NUM_GROUPS) * 25;
+    return `hsla(${hue}, 80%, 55%, ${alpha})`;
+  } else {
+    const hue = 170 + (g.id / NUM_GROUPS) * 30;
+    return `hsla(${hue}, 70%, 55%, ${alpha})`;
+  }
+}
+function groupGlow(g) { return g.tier === 1 ? 'rgba(212,160,23,0.4)' : 'rgba(23,162,184,0.4)'; }
+
+// ═══════════════════════════════════════════
+// CANVAS SETUP
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy, dpr, radius;
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const main = canvas.parentElement;
+  W = main.clientWidth;
+  H = main.clientHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cx = W / 2;
+  cy = H / 2;
+  radius = Math.min(W, H) * 0.38;
+  const svg = document.getElementById('labelOverlay');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ═══════════════════════════════════════════
+// GEOMETRY
+// ═══════════════════════════════════════════
+function starPolygon(x, y, outerR, innerR, n) {
+  const pts = [];
+  for (let i = 0; i < n * 2; i++) {
+    const angle = (i * Math.PI / n) - Math.PI / 2;
+    const r = i % 2 === 0 ? outerR : innerR;
+    pts.push({ x: x + Math.cos(angle) * r, y: y + Math.sin(angle) * r });
+  }
+  return pts;
+}
+
+function drawStar(ctx, x, y, outerR, innerR, n, stroke, fill, lineWidth=1) {
+  const pts = starPolygon(x, y, outerR, innerR, n);
+  ctx.beginPath();
+  pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lineWidth; ctx.stroke(); }
+}
+
+function drawIslamicPattern(ctx, x, y, r, depth, color) {
+  if (depth <= 0 || r < 3) return;
+  drawStar(ctx, x, y, r, r * 0.45, 19, color, null, 0.5);
+  // Inner recursive stars
+  if (depth > 1) {
+    const innerR = r * 0.35;
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * TAU - Math.PI / 2;
+      const nx = x + Math.cos(angle) * r * 0.55;
+      const ny = y + Math.sin(angle) * r * 0.55;
+      drawIslamicPattern(ctx, nx, ny, innerR, depth - 1, color);
+    }
+  }
+}
+
+function drawArabesque(ctx, x1, y1, x2, y2, amplitude, color) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2;
+  const dx = x2 - x1, dy = y2 - y1;
+  const nx = -dy, ny = dx;
+  const len = Math.sqrt(nx*nx + ny*ny) || 1;
+  ctx.quadraticCurveTo(mx + (nx/len)*amplitude, my + (ny/len)*amplitude, x2, y2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+// ═══════════════════════════════════════════
+// PARTICLE SYSTEM
+// ═══════════════════════════════════════════
+const particles = [];
+const MAX_PARTICLES = 300;
+
+function spawnParticle(mode) {
+  const p = {x:0, y:0, vx:0, vy:0, life:0, maxLife:0, size:0, color:'', mode: mode||'orbital'};
+  resetParticle(p);
+  return p;
+}
+
+function resetParticle(p) {
+  if (p.mode === 'orbital') {
+    const angle = Math.random() * TAU;
+    const dist = radius * (0.3 + Math.random() * 0.8);
+    p.x = cx + Math.cos(angle) * dist;
+    p.y = cy + Math.sin(angle) * dist;
+    const speed = 0.2 + Math.random() * 0.4;
+    p.vx = Math.cos(angle + Math.PI/2) * speed;
+    p.vy = Math.sin(angle + Math.PI/2) * speed;
+  } else if (p.mode === 'drift') {
+    p.x = Math.random() * W * 0.1;
+    p.y = Math.random() * H;
+    p.vx = 0.5 + Math.random() * 1.5;
+    p.vy = (Math.random() - 0.5) * 0.3;
+  } else {
+    p.x = cx + (Math.random()-0.5) * W * 0.8;
+    p.y = cy + (Math.random()-0.5) * H * 0.8;
+    p.vx = (Math.random()-0.5) * 0.3;
+    p.vy = (Math.random()-0.5) * 0.3;
+  }
+  p.life = 0;
+  p.maxLife = 120 + Math.random() * 200;
+  p.size = 1 + Math.random() * 2;
+  const gold = Math.random() > 0.3;
+  p.color = gold ? `rgba(201,168,76,${0.3+Math.random()*0.4})` : `rgba(96,245,224,${0.2+Math.random()*0.3})`;
+}
+
+for (let i = 0; i < MAX_PARTICLES; i++) particles.push(spawnParticle('orbital'));
+
+function updateParticles() {
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life++;
+    if (p.life > p.maxLife || p.x < -50 || p.x > W+50 || p.y < -50 || p.y > H+50) resetParticle(p);
+  });
+}
+
+function renderParticles(ctx) {
+  const prevComp = ctx.globalCompositeOperation;
+  ctx.globalCompositeOperation = 'lighter';
+  particles.forEach(p => {
+    const alpha = 1 - p.life / p.maxLife;
+    const r = p.size * alpha;
+    if (r < 0.3) return;
+    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 3);
+    grad.addColorStop(0, p.color);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r * 3, 0, TAU);
+    ctx.fill();
+  });
+  ctx.globalCompositeOperation = prevComp;
+}
+
+// ═══════════════════════════════════════════
+// VIEW STATE
+// ═══════════════════════════════════════════
+let currentView = 'mandala';
+let transitionProgress = 1;
+let transitionFrom = null;
+let hoveredGroup = null;
+let lockedGroup = null;
+let animTime = 0;
+
+// Group positions per view (computed on resize/switch)
+let groupPositions = GROUPS.map(() => ({x: 0, y: 0, r: 0, targetX: 0, targetY: 0, targetR: 0}));
+
+function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function switchView(name) {
+  if (name === currentView && transitionProgress >= 1) return;
+  transitionFrom = currentView;
+  currentView = name;
+  transitionProgress = 0;
+  // Store current positions as "from"
+  groupPositions.forEach(gp => { gp.fromX = gp.x; gp.fromY = gp.y; gp.fromR = gp.r; });
+  computeTargetPositions(name);
+  // Update particle mode
+  particles.forEach(p => {
+    p.mode = name === 'flow' ? 'drift' : name === 'constellation' ? 'float' : 'orbital';
+  });
+  // Update buttons
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === name);
+  });
+}
+
+function computeTargetPositions(view) {
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const proportion = g.count / TOTAL;
+    if (view === 'mandala') {
+      const angle = (i / NUM_GROUPS) * TAU - Math.PI / 2;
+      const dist = radius * 0.65;
+      gp.targetX = cx + Math.cos(angle) * dist;
+      gp.targetY = cy + Math.sin(angle) * dist;
+      gp.targetR = Math.max(12, Math.sqrt(proportion) * radius * 0.45);
+    } else if (view === 'fractal') {
+      const startAngle = GROUPS.slice(0, i).reduce((s, gg) => s + (gg.count/TOTAL) * TAU, 0) - Math.PI/2;
+      const sweep = proportion * TAU;
+      const midAngle = startAngle + sweep / 2;
+      gp.targetX = cx + Math.cos(midAngle) * radius * 0.6;
+      gp.targetY = cy + Math.sin(midAngle) * radius * 0.6;
+      gp.targetR = Math.max(10, proportion * radius * 1.2);
+    } else if (view === 'constellation') {
+      const angle = (i / NUM_GROUPS) * TAU - Math.PI / 2;
+      const dist = radius * 0.4;
+      gp.targetX = cx + Math.cos(angle) * dist;
+      gp.targetY = cy + Math.sin(angle) * dist;
+      gp.targetR = Math.max(10, Math.sqrt(proportion) * 35);
+    } else if (view === 'flow') {
+      const yStart = 60;
+      const yRange = H - 120;
+      const cumPropBefore = GROUPS.slice(0,i).reduce((s,gg) => s + gg.count/TOTAL, 0);
+      const yCenter = yStart + (cumPropBefore + proportion/2) * yRange;
+      gp.targetX = W * 0.15;
+      gp.targetY = yCenter;
+      gp.targetR = Math.max(8, proportion * yRange * 0.45);
+    }
+  });
+}
+
+// Init positions
+computeTargetPositions('mandala');
+groupPositions.forEach(gp => { gp.x = gp.targetX; gp.y = gp.targetY; gp.r = gp.targetR; gp.fromX = gp.targetX; gp.fromY = gp.targetY; gp.fromR = gp.targetR; });
+
+// ═══════════════════════════════════════════
+// VIEW RENDERERS
+// ═══════════════════════════════════════════
+
+function renderMandala(ctx) {
+  // Central 19-pointed star
+  const pulse = 1 + Math.sin(animTime * 0.015) * 0.03;
+  drawStar(ctx, cx, cy, radius * 0.28 * pulse, radius * 0.12 * pulse, 19, 'rgba(201,168,76,0.6)', 'rgba(201,168,76,0.05)', 1.5);
+  drawStar(ctx, cx, cy, radius * 0.2 * pulse, radius * 0.09 * pulse, 19, 'rgba(201,168,76,0.3)', null, 0.5);
+
+  // Connecting lines from center to groups
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const color = groupColor(g, 0.15);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(gp.x, gp.y);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Group sectors with Islamic patterns
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const color = groupColor(g, 0.7);
+    const glowC = groupColor(g, 0.15);
+
+    // Glow circle
+    const grad = ctx.createRadialGradient(gp.x, gp.y, 0, gp.x, gp.y, gp.r * 2);
+    grad.addColorStop(0, glowC);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r * 2, 0, TAU);
+    ctx.fill();
+
+    // Islamic pattern fill
+    drawIslamicPattern(ctx, gp.x, gp.y, gp.r, 2, color);
+
+    // Highlight on hover
+    if (hoveredGroup === i || lockedGroup === i) {
+      ctx.beginPath();
+      ctx.arc(gp.x, gp.y, gp.r + 4, 0, TAU);
+      ctx.strokeStyle = groupColor(g, 0.9);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+
+  // Outer decorative ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.strokeStyle = 'rgba(201,168,76,0.12)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Arabesque connections between adjacent groups
+  for (let i = 0; i < NUM_GROUPS; i++) {
+    const a = groupPositions[i];
+    const b = groupPositions[(i+1) % NUM_GROUPS];
+    drawArabesque(ctx, a.x, a.y, b.x, b.y, 15 + Math.sin(animTime*0.02 + i)*8, groupColor(GROUPS[i], 0.12));
+  }
+}
+
+function renderFractal(ctx) {
+  // Three concentric rings: 19, groups, outer
+  const pulse = 1 + Math.sin(animTime * 0.01) * 0.02;
+
+  // Outer ring (decorative)
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * pulse, 0, TAU);
+  ctx.strokeStyle = 'rgba(201,168,76,0.15)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Inner ring: 19 segments
+  const innerR = radius * 0.25;
+  for (let i = 0; i < 19; i++) {
+    const a1 = (i / 19) * TAU - Math.PI/2;
+    const a2 = ((i+1) / 19) * TAU - Math.PI/2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR, a1, a2);
+    ctx.strokeStyle = `hsla(${35 + i*4}, 70%, 55%, 0.5)`;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    // Tick marks
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a1) * (innerR - 6), cy + Math.sin(a1) * (innerR - 6));
+    ctx.lineTo(cx + Math.cos(a1) * (innerR + 6), cy + Math.sin(a1) * (innerR + 6));
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // "19" label at center
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 24px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('19', cx, cy);
+
+  // Middle ring: 13 group arcs
+  const midR = radius * 0.6;
+  let cumAngle = -Math.PI / 2;
+  GROUPS.forEach((g, i) => {
+    const sweep = (g.count / TOTAL) * TAU;
+    const midAngle = cumAngle + sweep / 2;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, midR, cumAngle, cumAngle + sweep);
+    const isHighlighted = hoveredGroup === i || lockedGroup === i;
+    ctx.strokeStyle = groupColor(g, isHighlighted ? 1 : 0.7);
+    ctx.lineWidth = isHighlighted ? 8 : 5;
+    ctx.stroke();
+
+    // Radial lines at boundaries
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(cumAngle) * (midR - 15), cy + Math.sin(cumAngle) * (midR - 15));
+    ctx.lineTo(cx + Math.cos(cumAngle) * (midR + 15), cy + Math.sin(cumAngle) * (midR + 15));
+    ctx.strokeStyle = groupColor(g, 0.3);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Small star at midpoint
+    const sx = cx + Math.cos(midAngle) * midR;
+    const sy = cy + Math.sin(midAngle) * midR;
+    drawStar(ctx, sx, sy, 6, 3, 6, groupColor(g, 0.6), null, 0.8);
+
+    cumAngle += sweep;
+  });
+
+  // Outer ring: 19² = 361 fine segments
+  for (let i = 0; i < FACTOR_19SQ; i++) {
+    if (i % 19 === 0) {
+      const a = (i / FACTOR_19SQ) * TAU - Math.PI/2;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * (radius - 8), cy + Math.sin(a) * (radius - 8));
+      ctx.lineTo(cx + Math.cos(a) * (radius + 4), cy + Math.sin(a) * (radius + 4));
+      ctx.strokeStyle = 'rgba(201,168,76,0.25)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
+  // Labels for the formula
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 13px Inter';
+  ctx.fillText('19²', cx, cy + innerR + 20);
+  ctx.fillText('× P(29)', cx, cy + innerR + 36);
+}
+
+function renderConstellation(ctx) {
+  // All 29 unique chapters from the groups
+  const allChapters = [];
+  const chapterToGroups = {};
+  GROUPS.forEach((g, gi) => {
+    g.chapters.forEach(ch => {
+      if (!chapterToGroups[ch]) { chapterToGroups[ch] = []; allChapters.push(ch); }
+      chapterToGroups[ch].push(gi);
+    });
+  });
+
+  // Position chapters in outer ring
+  const chapterPositions = {};
+  allChapters.sort((a,b) => a-b);
+  allChapters.forEach((ch, i) => {
+    const angle = (i / allChapters.length) * TAU - Math.PI/2;
+    const dist = radius * 0.85;
+    chapterPositions[ch] = { x: cx + Math.cos(angle) * dist, y: cy + Math.sin(angle) * dist };
+  });
+
+  // Draw connections
+  GROUPS.forEach((g, gi) => {
+    const gp = groupPositions[gi];
+    const isHighlighted = hoveredGroup === gi || lockedGroup === gi;
+    g.chapters.forEach(ch => {
+      const cp = chapterPositions[ch];
+      if (!cp) return;
+      ctx.beginPath();
+      ctx.moveTo(gp.x, gp.y);
+      ctx.lineTo(cp.x, cp.y);
+      ctx.strokeStyle = groupColor(g, isHighlighted ? 0.6 : 0.1);
+      ctx.lineWidth = isHighlighted ? 2 : 0.5;
+      ctx.stroke();
+    });
+  });
+
+  // Draw chapter nodes
+  allChapters.forEach(ch => {
+    const cp = chapterPositions[ch];
+    const isConnectedToHovered = (hoveredGroup !== null || lockedGroup !== null) &&
+      chapterToGroups[ch].includes(hoveredGroup !== null ? hoveredGroup : lockedGroup);
+
+    ctx.beginPath();
+    ctx.arc(cp.x, cp.y, isConnectedToHovered ? 6 : 4, 0, TAU);
+    ctx.fillStyle = isConnectedToHovered ? '#e0dcd0' : 'rgba(224,220,208,0.4)';
+    ctx.fill();
+
+    if (isConnectedToHovered) {
+      ctx.beginPath();
+      ctx.arc(cp.x, cp.y, 10, 0, TAU);
+      ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Chapter number label
+    ctx.fillStyle = isConnectedToHovered ? '#e0dcd0' : 'rgba(224,220,208,0.3)';
+    ctx.font = `${isConnectedToHovered ? '600 11px' : '300 9px'} Inter`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const labelDist = radius * 0.95;
+    const angle = Math.atan2(cp.y - cy, cp.x - cx);
+    ctx.fillText(ch, cx + Math.cos(angle)*labelDist, cy + Math.sin(angle)*labelDist);
+  });
+
+  // Draw group nodes (larger, glowing)
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const isHighlighted = hoveredGroup === i || lockedGroup === i;
+    const color = groupColor(g, isHighlighted ? 1 : 0.7);
+
+    // Glow
+    const grad = ctx.createRadialGradient(gp.x, gp.y, 0, gp.x, gp.y, gp.r * 2.5);
+    grad.addColorStop(0, groupColor(g, 0.25));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r * 2.5, 0, TAU);
+    ctx.fill();
+
+    // Node
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r, 0, TAU);
+    ctx.fillStyle = groupColor(g, 0.15);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isHighlighted ? 2.5 : 1.5;
+    ctx.stroke();
+
+    // Star inside
+    drawStar(ctx, gp.x, gp.y, gp.r * 0.7, gp.r * 0.3, 6, color, null, 0.8);
+  });
+
+  // Special highlight for Ch 42 (dual membership: HM + ASQ)
+  const ch42 = chapterPositions[42];
+  if (ch42) {
+    ctx.beginPath();
+    ctx.arc(ch42.x, ch42.y, 8, 0, TAU);
+    ctx.strokeStyle = 'rgba(245,208,96,0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3,3]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function renderFlow(ctx) {
+  const xStart = W * 0.12;
+  const xEnd = W * 0.82;
+  const xMerge = W * 0.88;
+  const yStart = 50;
+  const yRange = H - 100;
+  const mergeY = cy;
+  const flowTime = animTime * 0.02;
+
+  // Draw streams
+  let cumY = yStart;
+  GROUPS.forEach((g, i) => {
+    const streamH = Math.max(4, (g.count / TOTAL) * yRange);
+    const streamCenterY = cumY + streamH / 2;
+    const gp = groupPositions[i];
+    const isHighlighted = hoveredGroup === i || lockedGroup === i;
+    const color = groupColor(g, isHighlighted ? 0.7 : 0.35);
+
+    // Stream body (bezier from left to merge point)
+    ctx.beginPath();
+    ctx.moveTo(xStart, cumY);
+    ctx.bezierCurveTo(xEnd, cumY, xEnd, mergeY - streamH/2, xMerge, mergeY - 2);
+    ctx.lineTo(xMerge, mergeY + 2);
+    ctx.bezierCurveTo(xEnd, mergeY + streamH/2, xEnd, cumY + streamH, xStart, cumY + streamH);
+    ctx.closePath();
+    ctx.fillStyle = groupColor(g, isHighlighted ? 0.15 : 0.06);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isHighlighted ? 1.5 : 0.5;
+    ctx.stroke();
+
+    // Flowing dots along the stream
+    const numDots = Math.max(3, Math.floor(g.div19 / 8));
+    for (let d = 0; d < numDots; d++) {
+      const t = ((d / numDots) + flowTime * (0.3 + i * 0.02)) % 1;
+      const px = lerp(xStart, xMerge, t);
+      // Vertical position curves toward merge
+      const py = lerp(streamCenterY, mergeY, t * t);
+      const isDivisiblePulse = d % 19 === Math.floor(animTime * 0.1) % 19;
+      const dotR = isDivisiblePulse ? 3.5 : 1.5;
+      const dotAlpha = isDivisiblePulse ? 0.9 : 0.4;
+
+      ctx.beginPath();
+      ctx.arc(px, py, dotR, 0, TAU);
+      ctx.fillStyle = groupColor(g, dotAlpha);
+      ctx.fill();
+    }
+
+    // Label at left
+    ctx.fillStyle = groupColor(g, 0.6);
+    ctx.font = '600 10px Inter';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(g.latin, xStart - 8, streamCenterY);
+
+    // Count at right of stream start
+    ctx.fillStyle = groupColor(g, 0.3);
+    ctx.font = '300 9px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText(g.count.toLocaleString(), xStart + 4, streamCenterY);
+
+    cumY += streamH;
+  });
+
+  // Merge point: total
+  ctx.beginPath();
+  ctx.arc(xMerge + 20, mergeY, 24, 0, TAU);
+  ctx.fillStyle = 'rgba(201,168,76,0.08)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  drawStar(ctx, xMerge + 20, mergeY, 20, 8, 19, 'rgba(201,168,76,0.3)', null, 0.8);
+
+  ctx.fillStyle = 'rgba(201,168,76,0.8)';
+  ctx.font = '600 12px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('39,349', xMerge + 20, mergeY + 34);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('÷19 = 2,071', xMerge + 20, mergeY + 48);
+}
+
+// ═══════════════════════════════════════════
+// SVG LABELS
+// ═══════════════════════════════════════════
+const svg = document.getElementById('labelOverlay');
+const svgNS = 'http://www.w3.org/2000/svg';
+const labelElements = [];
+
+// Create SVG defs for glow filter
+const defs = document.createElementNS(svgNS, 'defs');
+const filter = document.createElementNS(svgNS, 'filter');
+filter.setAttribute('id', 'glow');
+filter.setAttribute('x', '-50%'); filter.setAttribute('y', '-50%');
+filter.setAttribute('width', '200%'); filter.setAttribute('height', '200%');
+const blur = document.createElementNS(svgNS, 'feGaussianBlur');
+blur.setAttribute('stdDeviation', '4');
+blur.setAttribute('result', 'blur');
+const merge = document.createElementNS(svgNS, 'feMerge');
+const mn1 = document.createElementNS(svgNS, 'feMergeNode'); mn1.setAttribute('in', 'blur');
+const mn2 = document.createElementNS(svgNS, 'feMergeNode'); mn2.setAttribute('in', 'SourceGraphic');
+merge.appendChild(mn1); merge.appendChild(mn2);
+filter.appendChild(blur); filter.appendChild(merge);
+defs.appendChild(filter);
+svg.appendChild(defs);
+
+GROUPS.forEach((g, i) => {
+  const text = document.createElementNS(svgNS, 'text');
+  text.setAttribute('font-family', "'Amiri', serif");
+  text.setAttribute('font-size', Math.max(16, 22 - g.arabic.length * 2));
+  text.setAttribute('fill', g.tier === 1 ? '#f5d060' : '#60f5e0');
+  text.setAttribute('text-anchor', 'middle');
+  text.setAttribute('dominant-baseline', 'central');
+  text.setAttribute('direction', 'rtl');
+  text.setAttribute('filter', 'url(#glow)');
+  text.style.textShadow = g.tier === 1
+    ? '0 0 15px rgba(245,208,96,0.6), 0 0 30px rgba(245,208,96,0.2)'
+    : '0 0 15px rgba(96,245,224,0.6), 0 0 30px rgba(96,245,224,0.2)';
+  text.textContent = g.arabic;
+  svg.appendChild(text);
+  labelElements.push(text);
+});
+
+function updateLabels() {
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const el = labelElements[i];
+    if (currentView === 'flow') {
+      el.setAttribute('x', gp.x - 40);
+      el.setAttribute('y', gp.y);
+      el.setAttribute('font-size', '14');
+    } else {
+      const offsetY = currentView === 'constellation' ? -gp.r - 10 : 0;
+      el.setAttribute('x', gp.x);
+      el.setAttribute('y', gp.y + offsetY);
+      el.setAttribute('font-size', Math.max(14, Math.min(26, gp.r * 0.8)));
+    }
+    el.setAttribute('opacity', (hoveredGroup !== null && hoveredGroup !== i && lockedGroup !== i) ? '0.3' : '1');
+  });
+}
+
+// ═══════════════════════════════════════════
+// INFO PANEL
+// ═══════════════════════════════════════════
+const infoPanel = document.getElementById('infoPanel');
+
+function showGroupInfo(gi) {
+  if (gi === null) { infoPanel.classList.remove('visible'); return; }
+  const g = GROUPS[gi];
+  document.getElementById('panelArabic').textContent = g.arabic;
+  document.getElementById('panelLatin').textContent = g.latin + ' — Group ' + (gi+1) + ' of 13';
+  document.getElementById('panelChapters').textContent = g.chapters.join(', ');
+  document.getElementById('panelCount').textContent = g.count.toLocaleString();
+  document.getElementById('panelDiv19').textContent = g.div19.toLocaleString();
+  document.getElementById('panelProportion').textContent = (g.count / TOTAL * 100).toFixed(1) + '%';
+  const tierBadge = document.getElementById('panelTier');
+  tierBadge.textContent = 'Tier ' + g.tier + (g.tier === 1 ? ' — Encoding Independent' : ' — Encoding Dependent');
+  tierBadge.className = 'tier-badge tier-' + g.tier;
+  infoPanel.classList.add('visible');
+}
+
+// ═══════════════════════════════════════════
+// INTERACTION
+// ═══════════════════════════════════════════
+function getGroupAtPoint(mx, my) {
+  for (let i = 0; i < NUM_GROUPS; i++) {
+    const gp = groupPositions[i];
+    const dx = mx - gp.x, dy = my - gp.y;
+    const hitR = Math.max(gp.r + 5, 20);
+    if (dx*dx + dy*dy < hitR*hitR) return i;
+  }
+  return null;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  hoveredGroup = getGroupAtPoint(mx, my);
+  canvas.style.cursor = hoveredGroup !== null ? 'pointer' : 'default';
+  if (lockedGroup === null) showGroupInfo(hoveredGroup);
+});
+
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const clicked = getGroupAtPoint(mx, my);
+  if (clicked !== null) {
+    lockedGroup = lockedGroup === clicked ? null : clicked;
+    showGroupInfo(lockedGroup);
+  } else {
+    lockedGroup = null;
+    showGroupInfo(null);
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  hoveredGroup = null;
+  if (lockedGroup === null) showGroupInfo(null);
+});
+
+// Touch support
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const mx = touch.clientX - rect.left;
+  const my = touch.clientY - rect.top;
+  const tapped = getGroupAtPoint(mx, my);
+  if (tapped !== null) {
+    lockedGroup = lockedGroup === tapped ? null : tapped;
+    hoveredGroup = tapped;
+    showGroupInfo(lockedGroup !== null ? lockedGroup : tapped);
+  } else {
+    lockedGroup = null;
+    hoveredGroup = null;
+    showGroupInfo(null);
+  }
+}, {passive: false});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.key === '1') switchView('mandala');
+  else if (e.key === '2') switchView('fractal');
+  else if (e.key === '3') switchView('constellation');
+  else if (e.key === '4') switchView('flow');
+});
+
+// ═══════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════
+function exportPNG() {
+  // Create high-res export canvas
+  const scale = 2;
+  const expCanvas = document.createElement('canvas');
+  expCanvas.width = W * scale;
+  expCanvas.height = H * scale;
+  const ectx = expCanvas.getContext('2d');
+  ectx.setTransform(scale, 0, 0, scale, 0, 0);
+
+  // Draw background
+  ectx.fillStyle = '#0a0a12';
+  ectx.fillRect(0, 0, W, H);
+
+  // Render current view
+  const origCtx = ctx;
+  renderCurrentView(ectx);
+
+  // Render particles
+  renderParticles(ectx);
+
+  // Render Arabic labels by drawing SVG onto canvas
+  const svgClone = svg.cloneNode(true);
+  const svgData = new XMLSerializer().serializeToString(svgClone);
+  const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  img.onload = () => {
+    ectx.drawImage(img, 0, 0, W, H);
+    URL.revokeObjectURL(url);
+
+    // Title and footer
+    ectx.fillStyle = 'rgba(201,168,76,0.6)';
+    ectx.font = '600 16px Inter';
+    ectx.textAlign = 'left';
+    ectx.fillText('7430 Project — Quran Fractal', 20, 30);
+    ectx.font = '300 11px Inter';
+    ectx.fillText('39,349 = 19² × P(29)', 20, H - 15);
+    ectx.textAlign = 'right';
+    ectx.fillText('github.com/7430project/quran-fractal', W - 20, H - 15);
+
+    // Download
+    expCanvas.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `7430-fractal-${currentView}.png`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, 'image/png');
+  };
+  img.src = url;
+}
+
+function renderCurrentView(c) {
+  if (currentView === 'mandala') renderMandala(c);
+  else if (currentView === 'fractal') renderFractal(c);
+  else if (currentView === 'constellation') renderConstellation(c);
+  else if (currentView === 'flow') renderFlow(c);
+}
+
+// ═══════════════════════════════════════════
+// MAIN LOOP
+// ═══════════════════════════════════════════
+function frame() {
+  animTime++;
+
+  // Transition
+  if (transitionProgress < 1) {
+    transitionProgress = Math.min(1, transitionProgress + 0.02);
+    const t = easeInOut(transitionProgress);
+    groupPositions.forEach(gp => {
+      gp.x = lerp(gp.fromX, gp.targetX, t);
+      gp.y = lerp(gp.fromY, gp.targetY, t);
+      gp.r = lerp(gp.fromR, gp.targetR, t);
+    });
+  }
+
+  // Clear
+  ctx.clearRect(0, 0, W, H);
+
+  // Background gradient
+  const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 1.5);
+  bgGrad.addColorStop(0, 'rgba(20,18,30,1)');
+  bgGrad.addColorStop(1, 'rgba(10,10,18,1)');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Render view
+  renderCurrentView(ctx);
+
+  // Particles
+  updateParticles();
+  renderParticles(ctx);
+
+  // SVG labels
+  updateLabels();
+
+  requestAnimationFrame(frame);
+}
+
+// Wait for fonts then start
+document.fonts.ready.then(() => {
+  resize();
+  frame();
+}).catch(() => {
+  // Fallback: start after 3s even if font fails
+  setTimeout(() => { resize(); frame(); }, 3000);
+});
+
+// Also start after 3s as safety net
+setTimeout(() => {
+  if (animTime === 0) { resize(); frame(); }
+}, 3000);
+</script>
+</body>
+</html>
