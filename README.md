@@ -1,46 +1,84 @@
 # quran-fractal
 
-**39,349 = 19² × P(29)**
+Verification pipeline and artifacts for the [74:30 Project](https://7430project.com).
 
-Verification script and assembled Quran text for the [74:30 Project](https://7430project.com).
+## Overview
 
-## What This Is
+This repository assembles a Fractal Edition of the Quran from Tanzil source files, applies the project’s merge rules, counts the Muqatta'at letter groups, and produces both:
 
-The Quran contains 29 chapters marked with combinations of Arabic letters called the Muqatta'at. Chapter 74, verse 30 states: *"Over it are nineteen."*
+- a human-readable artifact: `fractal_edition.txt`
+- a machine-readable artifact: `build/verification-summary.json`
 
-When you count the named letters across their chapters, grouped by their shared initials, you get 13 totals. All 13 divide by 19. Their sum — 39,349 — equals 19² × 109, where 109 is the 29th prime and 29 is the number of marked chapters. That same number is also the total word count of those 29 chapters.
+The core claim under examination is:
 
-This repository contains everything needed to verify this independently.
+`39,349 = 19² × P(29)`
+
+where `39,349` is the sum of the 13 Muqatta'at group totals and also the word count of the 29 Muqatta'at surahs in the assembled edition.
 
 ## Quick Start
 
-```
-git clone https://github.com/7430project/quran-fractal.git
-cd quran-fractal
+### Legacy entrypoint
+
+```bash
 python3 verify.py
 ```
 
-The script outputs `fractal_edition.txt` — the assembled Quran text with the complete verification proof appended.
+### Packaged CLI
 
-Upload `fractal_edition.txt` to any AI and ask it to verify the claims.
+```bash
+python3 -m quran_fractal verify --base-dir . --log-level INFO
+```
 
-## What's In the Repo
+If you want the installed console script:
 
-| File | Description |
-|------|-------------|
-| `verify.py` | Assembles the Fractal Edition, counts every letter, verifies all 13 groups |
-| `tanzil_data/quran-simple-plain.txt` | Tanzil Simple-Plain edition (source) |
-| `tanzil_data/quran-uthmani.txt` | Tanzil Uthmani edition (source) |
+```bash
+python3 -m pip install -e ".[dev]"
+quran-fractal verify
+```
 
-## What the Script Does
+## Outputs
 
-1. Loads both Quran source texts from tanzil.net
-2. Assembles the Fractal Edition (correct edition per surah)
-3. Applies verse merges (surahs 19, 20, 31, 36) and word corrections
-4. Counts every Muqatta'at letter in every group from the assembled text
-5. Verifies all 13 groups divide by 19
-6. Verifies the grand total = 39,349 = 19² × P(29)
-7. Writes `fractal_edition.txt` with the Quran text and verification proof
+Running the verifier produces:
+
+- `fractal_edition.txt`: assembled text plus the long-form verification narrative
+- `build/verification-summary.json`: structured summary intended for future web/docs consumers
+
+## Project Layout
+
+- `src/quran_fractal/`: package code
+- `tests/`: regression and parser tests
+- `docs/`: methodology, architecture, data, and contribution docs
+- `tanzil_data/`: source text inputs
+- `verify.py`: compatibility wrapper for the packaged CLI
+
+## Development
+
+Install tooling:
+
+```bash
+python3 -m pip install -e ".[dev]"
+```
+
+Run tests:
+
+```bash
+pytest
+```
+
+Run linting:
+
+```bash
+ruff check .
+```
+
+## What The Code Does
+
+1. Loads the Tanzil Simple and Uthmani text sources.
+2. Assembles a single edition with surah-level source selection.
+3. Applies verse-merge and word-merge normalization rules.
+4. Verifies all 13 Muqatta'at groups against expected totals.
+5. Computes aggregate book-level statistics.
+6. Writes text and JSON artifacts for downstream use.
 
 ## The 13 Groups
 
@@ -61,24 +99,16 @@ Upload `fractal_edition.txt` to any AI and ask it to verify the claims.
 | 13 | TS | 27 | 1,007 | 53 | 2 |
 | | **Total** | | **39,349** | **2,071** | |
 
-**Tier 1** (8 groups): Zero parameters. Consonants + plain alif only. Encoding-independent. (1/19)⁸ ≈ 10⁻¹⁰.
+## Docs
 
-**Tier 2** (5 groups): Constrained. Require specific Uthmani alif variants. Not load-bearing — reject all five and the core result is unchanged.
-
-## Requirements
-
-- Python 3.6+
-- No external dependencies (standard library only)
+- `docs/methodology.md`
+- `docs/architecture.md`
+- `docs/data-sources.md`
+- `docs/contributing.md`
+- `docs/api-contract.md`
 
 ## Source Data
 
-Quran text from [tanzil.net](https://tanzil.net) under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/).
+Quran text comes from [tanzil.net](https://tanzil.net) under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/).
 
-SHA-256 hashes of source files are included in the output for verification.
-
-## Project
-
-- Website: [7430project.com](https://7430project.com)
-- Download: [unzip.zip](https://7430project.com/unzip.zip)
-
-*Don't believe me. Count.*
+The JSON and text artifacts include source file hashes to support reproducibility.
