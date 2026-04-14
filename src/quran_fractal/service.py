@@ -12,7 +12,7 @@ from .artifacts import (
 )
 from .assembler import normalize_edition
 from .config import EXPECTED_GRAND_TOTAL
-from .counting import build_summary, compute_gradient_stats, verify_all_groups
+from .counting import build_summary, build_web_data, compute_gradient_stats, verify_all_groups
 from .loader import load_quran_file, resolve_source_paths
 
 LOGGER = logging.getLogger(__name__)
@@ -23,6 +23,7 @@ def run_verification(
     base_dir: Path,
     output_path: Path,
     summary_path: Path,
+    web_data_path: Path | None = None,
 ) -> dict[str, object]:
     simple_path, uthmani_path = resolve_source_paths(base_dir)
     LOGGER.info("Using source files: simple=%s uthmani=%s", simple_path, uthmani_path)
@@ -62,6 +63,16 @@ def run_verification(
         source_files=source_files,
     )
     write_summary_json(summary, summary_path, source_files=source_files)
+
+    if web_data_path is not None:
+        import json
+        web_data = build_web_data(edition, results, gradient, original_v1_texts)
+        web_data_path.parent.mkdir(parents=True, exist_ok=True)
+        web_data_path.write_text(
+            json.dumps(web_data, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        LOGGER.info("Wrote web data: %s", web_data_path)
 
     LOGGER.info("Wrote artifacts: text=%s summary=%s", output_path, summary_path)
     LOGGER.info(

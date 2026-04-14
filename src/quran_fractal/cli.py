@@ -38,6 +38,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path for the machine-readable JSON summary artifact.",
     )
     parser.add_argument(
+        "--web-data-output",
+        default="web/public/data/quran-data.json",
+        help="Path for the web research explorer JSON data.",
+    )
+    parser.add_argument(
         "--log-level",
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
@@ -62,6 +67,7 @@ def main(argv: list[str] | None = None) -> int:
         base_dir=Path(args.base_dir).resolve(),
         output_path=Path(args.output).resolve(),
         summary_path=Path(args.summary_output).resolve(),
+        web_data_path=Path(args.web_data_output).resolve(),
     )
 
     logger = logging.getLogger(__name__)

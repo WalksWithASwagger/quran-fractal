@@ -1,3 +1,9 @@
+/**
+ * Static group data — used by FractalVisualization for initial render
+ * before the full quran-data.json loads. The dynamic store (stores/quran-data.ts)
+ * is the source of truth once loaded.
+ */
+
 export interface LetterGroup {
   id: number;
   latin: string;
@@ -24,5 +30,5 @@ export const GROUPS: LetterGroup[] = [
   { id: 12, latin: 'TS',    arabic: 'طس',       chapters: [27],                            count: 1_007,  div19: 53,   tier: 2 },
 ];
 
-export const NUM_GROUPS = GROUPS.length; // 13
-export const TOTAL = GROUPS.reduce((sum, g) => sum + g.count, 0); // 39,349
+export const NUM_GROUPS = GROUPS.length;
+export const TOTAL = GROUPS.reduce((sum, g) => sum + g.count, 0);

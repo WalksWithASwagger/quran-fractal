@@ -6,7 +6,13 @@ import unicodedata
 from dataclasses import dataclass
 
 from .assembler import EditionVerse
-from .config import EXPECTED_GRAND_TOTAL, GROUPS, MERGE_V1_SURAHS, MUQATTAAT_SURAHS
+from .config import (
+    EXPECTED_GRAND_TOTAL,
+    GROUP_METADATA,
+    GROUPS,
+    MERGE_V1_SURAHS,
+    MUQATTAAT_SURAHS,
+)
 
 
 @dataclass(frozen=True)
@@ -167,6 +173,120 @@ def compute_gradient_stats(edition_list: list[EditionVerse]) -> GradientStats:
         total_words=total_words,
         muqattaat_words=muqattaat_words,
     )
+
+
+def _verse_letter_count(
+    text: str,
+    char_set: set[str],
+) -> int:
+    return sum(1 for ch in text if ch in char_set)
+
+
+def _applicable_text(
+    text: str,
+    surah: int,
+    ayah: int,
+    exclude_v1: bool,
+    original_v1_texts: dict[int, str],
+) -> str | None:
+    """Return the countable text for a verse, or None if it should be skipped."""
+    if not exclude_v1 or ayah != 1:
+        return text
+    if surah in MERGE_V1_SURAHS and surah in original_v1_texts:
+        orig_v1_len = len(original_v1_texts[surah])
+        return text[orig_v1_len + 1:]
+    return None
+
+
+def build_web_data(
+    edition_list: list[EditionVerse],
+    results: list[GroupResult],
+    gradient: GradientStats,
+    original_v1_texts: dict[int, str],
+) -> dict[str, object]:
+    """Build a comprehensive JSON structure for the web research explorer."""
+
+    surah_to_groups: dict[int, list[int]] = {}
+    group_char_sets: list[set[str]] = []
+    groups_out = []
+
+    for gi, (gdef, gresult) in enumerate(zip(GROUPS, results)):
+        char_set = set(gdef.consonants + gdef.alif_chars)
+        group_char_sets.append(char_set)
+        meta = GROUP_METADATA.get(gdef.name, {})
+
+        for s in gdef.surahs:
+            surah_to_groups.setdefault(s, []).append(gi)
+
+        groups_out.append({
+            "id": gi,
+            "name": gdef.name,
+            "arabic": meta.get("arabic", ""),
+            "tier": meta.get("tier", 1),
+            "surahs": gdef.surahs,
+            "edition": gdef.edition,
+            "excludeV1": gdef.exclude_v1,
+            "count": gresult.total,
+            "div19": gresult.total // 19,
+            "verified": gresult.verified,
+            "perSurah": [
+                {"surah": s, "consonants": c, "alif": a, "total": t}
+                for s, c, a, t in gresult.per_surah
+            ],
+        })
+
+    surah_info: dict[int, dict[str, object]] = {}
+    verses_out = []
+
+    for surah, ayah, text in edition_list:
+        word_count = len(text.split())
+
+        if surah not in surah_info:
+            surah_info[surah] = {
+                "number": surah,
+                "isMuqattaat": surah in MUQATTAAT_SURAHS,
+                "groups": surah_to_groups.get(surah, []),
+                "verseCount": 0,
+            }
+        surah_info[surah]["verseCount"] = int(surah_info[surah]["verseCount"]) + 1  # type: ignore[arg-type]
+
+        verse_entry: dict[str, object] = {
+            "s": surah,
+            "a": ayah,
+            "t": text,
+            "w": word_count,
+        }
+
+        applicable_groups = surah_to_groups.get(surah, [])
+        if applicable_groups:
+            lc: dict[str, int] = {}
+            for gi in applicable_groups:
+                gdef = GROUPS[gi]
+                countable = _applicable_text(
+                    text, surah, ayah, gdef.exclude_v1, original_v1_texts
+                )
+                if countable is not None:
+                    count = _verse_letter_count(countable, group_char_sets[gi])
+                    if count > 0:
+                        lc[str(gi)] = count
+            if lc:
+                verse_entry["lc"] = lc
+
+        verses_out.append(verse_entry)
+
+    surahs_out = [surah_info[i] for i in sorted(surah_info.keys())]
+
+    return {
+        "groups": groups_out,
+        "surahs": surahs_out,
+        "verses": verses_out,
+        "gradient": {
+            "totalLetters": gradient.total_letters,
+            "totalVerses": gradient.total_verses,
+            "totalWords": gradient.total_words,
+            "muqattaatWords": gradient.muqattaat_words,
+        },
+    }
 
 
 def build_summary(results: list[GroupResult], gradient: GradientStats) -> dict[str, object]:

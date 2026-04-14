@@ -70,6 +70,22 @@ MUQATTAAT_SURAHS = {
 
 EXPECTED_GRAND_TOTAL = 39349
 
+GROUP_METADATA: dict[str, dict[str, object]] = {
+    "ALM":   {"arabic": "الم",    "tier": 1},
+    "ALR":   {"arabic": "الر",    "tier": 2},
+    "ALMR":  {"arabic": "المر",   "tier": 2},
+    "ALMS":  {"arabic": "المص",   "tier": 1},
+    "HM":    {"arabic": "حم",     "tier": 1},
+    "ASQ":   {"arabic": "عسق",    "tier": 1},
+    "Q":     {"arabic": "ق",      "tier": 1},
+    "KHYAS": {"arabic": "كهيعص",  "tier": 1},
+    "TSM":   {"arabic": "طسم",    "tier": 1},
+    "YS":    {"arabic": "يس",     "tier": 1},
+    "N":     {"arabic": "ن",      "tier": 2},
+    "TH":    {"arabic": "طه",     "tier": 2},
+    "TS":    {"arabic": "طس",     "tier": 2},
+}
+
 GROUPS = [
     GroupDefinition(
         "ALM",
