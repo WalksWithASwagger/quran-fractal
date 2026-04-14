@@ -3,17 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>7430 Project — Quran Fractal Visualization</title>
+<title>7430 Project — Visualization</title>
+<meta name="description" content="Interactive visualizations of the mathematical patterns in the Muqatta'at. 39,349 = 19² × P(29).">
+<meta property="og:title" content="7430 Project — Visualization">
+<meta property="og:description" content="Interactive visualizations of the mathematical patterns in the Muqatta'at. 39,349 = 19² × P(29).">
+<meta property="og:url" content="https://7430project.com/visualization">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a12;color:#e0dcd0;font-family:'Inter',sans-serif;overflow:hidden;height:100vh;width:100vw}
 #app{display:flex;flex-direction:column;height:100vh}
-header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,18,0.95);border-bottom:1px solid rgba(201,168,76,0.2);z-index:10;flex-shrink:0}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,18,0.95);border-bottom:1px solid rgba(201,168,76,0.2);z-index:10;flex-shrink:0;gap:12px;flex-wrap:wrap}
 .header-left h1{font-size:1.3rem;font-weight:600;color:#c9a84c;letter-spacing:0.5px}
 .header-left p{font-size:0.75rem;color:#888;margin-top:2px}
-.view-buttons{display:flex;gap:6px}
-.view-btn{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:'Inter',sans-serif;transition:all 0.3s}
+.view-buttons{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.view-btn{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:'Inter',sans-serif;transition:all 0.3s}
 .view-btn:hover{background:rgba(201,168,76,0.2)}
 .view-btn.active{background:rgba(201,168,76,0.3);border-color:#c9a84c;box-shadow:0 0 12px rgba(201,168,76,0.3)}
 .export-btn{background:rgba(23,162,184,0.15);border:1px solid rgba(23,162,184,0.4);color:#17a2b8;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:'Inter',sans-serif;transition:all 0.3s}
@@ -45,14 +52,33 @@ header{flex-direction:column;gap:8px;padding:10px 16px}
 <div id="app">
 <header>
 <div class="header-left">
-<h1>7430 Project — Quran Fractal</h1>
-<p>Mathematical patterns in the Muqatta'at</p>
+<a href="https://7430project.com" style="text-decoration:none;color:inherit"><h1>7430 Project — Quran Fractal</h1></a>
+<p>Mathematical patterns in the Muqatta'at · <a href="https://7430project.com" style="color:#888;text-decoration:none">← back to methodology</a></p>
 </div>
 <div class="view-buttons">
 <button class="view-btn active" data-view="mandala" onclick="switchView('mandala')">Mandala</button>
 <button class="view-btn" data-view="fractal" onclick="switchView('fractal')">Fractal</button>
 <button class="view-btn" data-view="constellation" onclick="switchView('constellation')">Constellation</button>
 <button class="view-btn" data-view="flow" onclick="switchView('flow')">Flow</button>
+<button class="view-btn" data-view="scales" onclick="switchView('scales')">Scales</button>
+<button class="view-btn" data-view="galaxy" onclick="switchView('galaxy')">Galaxy</button>
+<button class="view-btn" data-view="tiers" onclick="switchView('tiers')">Tiers</button>
+<button class="view-btn" data-view="primes" onclick="switchView('primes')">Primes</button>
+<button class="view-btn" data-view="codex" onclick="switchView('codex')">Codex</button>
+<button class="view-btn" data-view="keystone" onclick="switchView('keystone')">Keystone</button>
+<button class="view-btn" data-view="sphere" onclick="switchView('sphere')">Sphere</button>
+<button class="view-btn" data-view="helix" onclick="switchView('helix')">Helix</button>
+<button class="view-btn" data-view="orbits" onclick="switchView('orbits')">Orbits</button>
+<button class="view-btn" data-view="lattice" onclick="switchView('lattice')">Lattice</button>
+<button class="view-btn" data-view="timeline" onclick="switchView('timeline')">Timeline</button>
+<button class="view-btn" data-view="tree" onclick="switchView('tree')">Tree</button>
+<button class="view-btn" data-view="cosmos" onclick="switchView('cosmos')">Cosmos</button>
+<button class="view-btn" data-view="resonance" onclick="switchView('resonance')">Resonance</button>
+<button class="view-btn" data-view="anchors" onclick="switchView('anchors')">Anchors</button>
+<button class="view-btn" data-view="antenna" onclick="switchView('antenna')">Antenna</button>
+<button class="view-btn" data-view="broadcast" onclick="switchView('broadcast')">Broadcast</button>
+<button class="view-btn" data-view="self" onclick="switchView('self')">Self</button>
+<button class="view-btn" data-view="seven430" onclick="switchView('seven430')">74:30</button>
 </div>
 <button class="export-btn" onclick="exportPNG()">Export PNG</button>
 </header>
@@ -71,7 +97,7 @@ header{flex-direction:column;gap:8px;padding:10px 16px}
 </main>
 <footer>
 <div class="formula">39,349 = 19² × P(29) — "Don't believe me. Count."</div>
-<a href="https://github.com/7430project/quran-fractal" target="_blank">github.com/7430project/quran-fractal</a> · Data: Tanzil.net (CC-BY 3.0)
+<a href="https://7430project.com" target="_blank">7430project.com</a> · <a href="https://github.com/7430project/quran-fractal" target="_blank">github.com/7430project/quran-fractal</a> · Data: Tanzil.net (CC-BY 3.0)
 </footer>
 </div>
 <script>
@@ -192,6 +218,33 @@ function drawArabesque(ctx, x1, y1, x2, y2, amplitude, color) {
 }
 
 // ═══════════════════════════════════════════
+// 3D PROJECTION
+// ═══════════════════════════════════════════
+const camera3D = { angle: 0, tilt: 0.35, fov: 800 };
+
+function project3D(x, y, z) {
+  // Yaw around Y axis
+  const ca = Math.cos(camera3D.angle);
+  const sa = Math.sin(camera3D.angle);
+  const x1 = x * ca - z * sa;
+  const z1 = x * sa + z * ca;
+  // Pitch around X axis
+  const ct = Math.cos(camera3D.tilt);
+  const st = Math.sin(camera3D.tilt);
+  const y1 = y * ct - z1 * st;
+  const z2 = y * st + z1 * ct;
+  // Perspective
+  const fov = camera3D.fov;
+  const sc = fov / (fov + z2);
+  return {
+    x: cx + x1 * sc,
+    y: cy + y1 * sc,
+    z: z2,
+    scale: Math.max(0.05, sc)
+  };
+}
+
+// ═══════════════════════════════════════════
 // PARTICLE SYSTEM
 // ═══════════════════════════════════════════
 const particles = [];
@@ -217,6 +270,14 @@ function resetParticle(p) {
     p.y = Math.random() * H;
     p.vx = 0.5 + Math.random() * 1.5;
     p.vy = (Math.random() - 0.5) * 0.3;
+  } else if (p.mode === 'radial-in') {
+    const angle = Math.random() * TAU;
+    const dist = radius * (1.05 + Math.random() * 0.35);
+    p.x = cx + Math.cos(angle) * dist;
+    p.y = cy + Math.sin(angle) * dist;
+    const speed = 0.25 + Math.random() * 0.35;
+    p.vx = -Math.cos(angle) * speed;
+    p.vy = -Math.sin(angle) * speed;
   } else {
     p.x = cx + (Math.random()-0.5) * W * 0.8;
     p.y = cy + (Math.random()-0.5) * H * 0.8;
@@ -278,6 +339,10 @@ function lerp(a, b, t) { return a + (b - a) * t; }
 
 function switchView(name) {
   if (name === currentView && transitionProgress >= 1) return;
+  // Clean up the 74:30 audio engine if leaving that view
+  if (currentView === 'seven430' && name !== 'seven430' && typeof stopSeven430Audio === 'function') {
+    stopSeven430Audio();
+  }
   transitionFrom = currentView;
   currentView = name;
   transitionProgress = 0;
@@ -286,7 +351,11 @@ function switchView(name) {
   computeTargetPositions(name);
   // Update particle mode
   particles.forEach(p => {
-    p.mode = name === 'flow' ? 'drift' : name === 'constellation' ? 'float' : 'orbital';
+    p.mode = name === 'flow' ? 'drift' :
+             name === 'constellation' || name === 'galaxy' ? 'float' :
+             name === 'scales' ? 'radial-in' :
+             name === 'codex' ? 'drift' :
+             'orbital';
   });
   // Update buttons
   document.querySelectorAll('.view-btn').forEach(btn => {
@@ -325,6 +394,110 @@ function computeTargetPositions(view) {
       gp.targetX = W * 0.15;
       gp.targetY = yCenter;
       gp.targetR = Math.max(8, proportion * yRange * 0.45);
+    } else if (view === 'scales') {
+      // Groups live on the Level 3 ring, placed at proportional angles
+      const l3R = radius * 0.62;
+      const startAngle = GROUPS.slice(0, i).reduce((s, gg) => s + (gg.count/TOTAL) * TAU, 0) - Math.PI/2;
+      const sweep = proportion * TAU;
+      const midAngle = startAngle + sweep / 2;
+      gp.targetX = cx + Math.cos(midAngle) * l3R;
+      gp.targetY = cy + Math.sin(midAngle) * l3R;
+      gp.targetR = Math.max(7, Math.sqrt(proportion) * 26);
+    } else if (view === 'galaxy') {
+      // Golden-angle spiral position for first chapter of the group
+      const firstCh = g.chapters[0];
+      const ga = 2.399963229728653;
+      const ang = firstCh * ga;
+      const r = radius * 0.15 + Math.sqrt(firstCh / 114) * radius * 0.75;
+      gp.targetX = cx + Math.cos(ang) * r;
+      gp.targetY = cy + Math.sin(ang) * r;
+      gp.targetR = 4 + Math.sqrt(g.chapters.length) * 2.5;
+    } else if (view === 'tiers') {
+      // Stack Tier 1 on the left, Tier 2 on the right
+      const tier1Order = [0, 3, 4, 5, 6, 7, 8, 9];  // ALM,ALMS,HM,ASQ,Q,KHYAS,TSM,YS
+      const tier2Order = [1, 2, 10, 11, 12];        // ALR,ALMR,N,TH,TS
+      if (g.tier === 1) {
+        const idx = tier1Order.indexOf(i);
+        gp.targetX = W * 0.28;
+        gp.targetY = 130 + idx * 46;
+      } else {
+        const idx = tier2Order.indexOf(i);
+        gp.targetX = W * 0.72;
+        gp.targetY = 130 + idx * 46;
+      }
+      gp.targetR = 10;
+    } else if (view === 'primes' || view === 'codex' || view === 'keystone' || view === 'lattice' || view === 'resonance' || view === 'anchors' || view === 'antenna' || view === 'broadcast' || view === 'self' || view === 'seven430') {
+      // Groups not used as interactive elements — hide
+      gp.targetX = cx;
+      gp.targetY = cy;
+      gp.targetR = 0;
+    } else if (view === 'timeline') {
+      // First chapter of group as anchor on horizontal axis
+      const xStart = 80, xEnd = W - 80;
+      const firstCh = g.chapters[0];
+      gp.targetX = lerp(xStart, xEnd, (firstCh - 1) / 113);
+      // Tier 1 above center, Tier 2 below
+      gp.targetY = g.tier === 1 ? cy - 60 : cy + 60;
+      gp.targetR = 8 + Math.sqrt(g.chapters.length) * 2;
+    } else if (view === 'tree') {
+      // Hierarchical tree: groups arrayed horizontally below a central root
+      const colSpacing = (W - 160) / NUM_GROUPS;
+      gp.targetX = 80 + colSpacing * (i + 0.5);
+      gp.targetY = cy + 80;
+      gp.targetR = 9;
+    } else if (view === 'cosmos') {
+      // Position will be set live by renderCosmos via 3D projection;
+      // initialize at center so the transition starts cleanly
+      gp.targetX = cx;
+      gp.targetY = cy;
+      gp.targetR = 8;
+    } else if (view === 'sphere') {
+      // Project the group's first chapter onto the Fibonacci sphere
+      const SC = 114;
+      const sphereR = radius * 0.7;
+      const firstCh = g.chapters[0];
+      const phi = Math.acos(1 - 2 * (firstCh - 0.5) / SC);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * (firstCh - 0.5);
+      const proj = project3D(
+        sphereR * Math.cos(theta) * Math.sin(phi),
+        sphereR * Math.sin(theta) * Math.sin(phi),
+        sphereR * Math.cos(phi)
+      );
+      gp.targetX = proj.x;
+      gp.targetY = proj.y;
+      gp.targetR = 6;
+    } else if (view === 'helix') {
+      // Position on the helix strand for this group's tier
+      const helixR = radius * 0.4;
+      const helixH = radius * 1.2;
+      const turns = 1.5;
+      const sameTier = GROUPS.filter(gg => gg.tier === g.tier);
+      const idxInTier = sameTier.indexOf(g);
+      const phaseOffset = g.tier === 1 ? 0 : Math.PI;
+      const tt = (idxInTier + 0.5) / sameTier.length;
+      const angle = tt * TAU * turns + phaseOffset;
+      const proj = project3D(
+        helixR * Math.cos(angle),
+        (tt - 0.5) * helixH,
+        helixR * Math.sin(angle)
+      );
+      gp.targetX = proj.x;
+      gp.targetY = proj.y;
+      gp.targetR = 7;
+    } else if (view === 'orbits') {
+      // Position on the orbital ring (sorted by count for radius)
+      const sorted = [...GROUPS].sort((a, b) => a.count - b.count);
+      const idx = sorted.indexOf(g);
+      const orbitR = radius * 0.2 + (idx / GROUPS.length) * radius * 0.7;
+      const tilt = (idx % 2 === 0 ? 1 : -1) * (0.1 + (idx / GROUPS.length) * 0.3);
+      const proj = project3D(
+        orbitR,
+        0,
+        0
+      );
+      gp.targetX = proj.x;
+      gp.targetY = proj.y;
+      gp.targetR = 8;
     }
   });
 }
@@ -676,6 +849,2906 @@ function renderFlow(ctx) {
 }
 
 // ═══════════════════════════════════════════
+// SCALES — the five-level fractal
+// ═══════════════════════════════════════════
+function renderScales(ctx) {
+  const pulse = 1 + Math.sin(animTime * 0.012) * 0.015;
+
+  // Five structural levels, outer → inner. Each carries its 19-equation.
+  const levels = [
+    { id: 1, name: 'BOOK',        equation: '332,519 = 19 × 17,501',  rFrac: 0.98, ticks: 6,   bigTick: 1 },
+    { id: 2, name: 'CHAPTERS',    equation: '39,349 = 19² × P(29)',    rFrac: 0.80, ticks: 29,  bigTick: 19 },
+    { id: 3, name: 'GROUPS',      equation: '13 group totals · each ÷ 19', rFrac: 0.62, ticks: 13, bigTick: 1 },
+    { id: 4, name: 'MULTIPLIERS', equation: 'Σk = 19 × 109',           rFrac: 0.44, ticks: 13,  bigTick: 1 },
+    { id: 5, name: 'TERMINAL',    equation: '109 = P(29)  ·  361 = 19²', rFrac: 0.26, ticks: 2, bigTick: 1 }
+  ];
+
+  // Soft radial gradient behind the rings — cues the depth/zoom
+  const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+  bgGrad.addColorStop(0, 'rgba(201,168,76,0.04)');
+  bgGrad.addColorStop(0.6, 'rgba(201,168,76,0.015)');
+  bgGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = bgGrad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.fill();
+
+  // Leader lines between levels at N/S/E/W — subtle dashed spokes
+  const spokeAngles = [-Math.PI/2, 0, Math.PI/2, Math.PI];
+  ctx.setLineDash([2, 4]);
+  spokeAngles.forEach(a => {
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * radius * 0.16, cy + Math.sin(a) * radius * 0.16);
+    ctx.lineTo(cx + Math.cos(a) * radius * 1.0,  cy + Math.sin(a) * radius * 1.0);
+    ctx.strokeStyle = 'rgba(201,168,76,0.06)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Draw each ring
+  levels.forEach((lvl, idx) => {
+    const r = radius * lvl.rFrac * pulse;
+    const depthAlpha = 0.18 + idx * 0.05;   // inner rings slightly brighter (deeper = more intense)
+
+    // The ring itself
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.strokeStyle = `rgba(201,168,76,${depthAlpha})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // A soft inner glow on the ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.strokeStyle = `rgba(201,168,76,${depthAlpha * 0.4})`;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Tick marks around the ring
+    const numTicks = lvl.ticks;
+    for (let i = 0; i < numTicks; i++) {
+      const a = (i / numTicks) * TAU - Math.PI / 2;
+      const isBig = (i % lvl.bigTick) === 0;
+      const tickLen = isBig ? 8 : 4;
+      const t1x = cx + Math.cos(a) * (r - tickLen);
+      const t1y = cy + Math.sin(a) * (r - tickLen);
+      const t2x = cx + Math.cos(a) * (r + tickLen);
+      const t2y = cy + Math.sin(a) * (r + tickLen);
+      ctx.beginPath();
+      ctx.moveTo(t1x, t1y);
+      ctx.lineTo(t2x, t2y);
+      ctx.strokeStyle = `rgba(201,168,76,${0.3 + idx * 0.08})`;
+      ctx.lineWidth = isBig ? 1 : 0.6;
+      ctx.stroke();
+    }
+
+    // Level label — placed above the ring at 12 o'clock, floating clear of content
+    const labelY = cy - r - 16;
+    const eqY    = cy - r - 4;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = `rgba(201,168,76,${0.55 + idx * 0.08})`;
+    ctx.font = '600 10px Inter';
+    ctx.fillText(`LEVEL ${lvl.id} · ${lvl.name}`, cx, labelY);
+    ctx.fillStyle = `rgba(201,168,76,${0.38 + idx * 0.08})`;
+    ctx.font = '300 9px Inter';
+    ctx.fillText(lvl.equation, cx, eqY);
+  });
+
+  // Level 5 — show the two terminal factors as small glowing marks
+  const l5R = radius * 0.26;
+  [{ a: -Math.PI/2, label: '361 = 19²' }, { a: Math.PI/2, label: '109 = P(29)' }].forEach(m => {
+    const x = cx + Math.cos(m.a) * l5R;
+    const y = cy + Math.sin(m.a) * l5R;
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, 8);
+    grad.addColorStop(0, 'rgba(201,168,76,0.6)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, TAU);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, TAU);
+    ctx.fillStyle = 'rgba(245,208,96,0.9)';
+    ctx.fill();
+  });
+
+  // Level 4 — 13 small diamond marks for the k multipliers, sized by k
+  const l4R = radius * 0.44;
+  GROUPS.forEach((g, i) => {
+    const startAngle = GROUPS.slice(0, i).reduce((s, gg) => s + (gg.count/TOTAL) * TAU, 0) - Math.PI/2;
+    const sweep = (g.count/TOTAL) * TAU;
+    const midAngle = startAngle + sweep / 2;
+    const x = cx + Math.cos(midAngle) * l4R;
+    const y = cy + Math.sin(midAngle) * l4R;
+    const size = 2 + Math.sqrt(g.div19) * 0.35;
+    ctx.beginPath();
+    ctx.moveTo(x, y - size);
+    ctx.lineTo(x + size, y);
+    ctx.lineTo(x, y + size);
+    ctx.lineTo(x - size, y);
+    ctx.closePath();
+    ctx.fillStyle = groupColor(g, 0.55);
+    ctx.fill();
+    ctx.strokeStyle = groupColor(g, 0.8);
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  // Level 3 — 13 group nodes (they use groupPositions, so they lerp in from other views)
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const isHighlighted = hoveredGroup === i || lockedGroup === i;
+    const color = groupColor(g, isHighlighted ? 1 : 0.75);
+
+    // Glow halo
+    const grad = ctx.createRadialGradient(gp.x, gp.y, 0, gp.x, gp.y, gp.r * 2.4);
+    grad.addColorStop(0, groupColor(g, isHighlighted ? 0.45 : 0.22));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r * 2.4, 0, TAU);
+    ctx.fill();
+
+    // Inner disc
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r, 0, TAU);
+    ctx.fillStyle = groupColor(g, 0.14);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isHighlighted ? 2 : 1.2;
+    ctx.stroke();
+
+    // 6-point star inside
+    drawStar(ctx, gp.x, gp.y, gp.r * 0.72, gp.r * 0.32, 6, color, null, 0.8);
+
+    // Faint leader from Level 3 node to its L4 multiplier diamond
+    const startAngle = GROUPS.slice(0, i).reduce((s, gg) => s + (gg.count/TOTAL) * TAU, 0) - Math.PI/2;
+    const sweep = (g.count/TOTAL) * TAU;
+    const midAngle = startAngle + sweep / 2;
+    const l4x = cx + Math.cos(midAngle) * l4R;
+    const l4y = cy + Math.sin(midAngle) * l4R;
+    ctx.beginPath();
+    ctx.moveTo(gp.x, gp.y);
+    ctx.lineTo(l4x, l4y);
+    ctx.strokeStyle = groupColor(g, isHighlighted ? 0.4 : 0.12);
+    ctx.lineWidth = isHighlighted ? 1.2 : 0.5;
+    ctx.stroke();
+  });
+
+  // Center: 19-pointed star anchor, same as Fractal view
+  drawStar(ctx, cx, cy, radius * 0.14 * pulse, radius * 0.06 * pulse, 19, 'rgba(201,168,76,0.55)', 'rgba(201,168,76,0.06)', 1);
+  drawStar(ctx, cx, cy, radius * 0.09 * pulse, radius * 0.04 * pulse, 19, 'rgba(201,168,76,0.3)', null, 0.5);
+  ctx.fillStyle = 'rgba(201,168,76,0.85)';
+  ctx.font = '600 22px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('19', cx, cy);
+}
+
+// ═══════════════════════════════════════════
+// GALAXY — 114 surahs, 29 carry the pattern
+// ═══════════════════════════════════════════
+function renderGalaxy(ctx) {
+  const SURAH_COUNT = 114;
+  const GA = 2.399963229728653; // golden angle in radians
+
+  // Build chapter → group map
+  const chapterToGroup = {};
+  GROUPS.forEach((g, gi) => g.chapters.forEach(ch => { chapterToGroup[ch] = gi; }));
+
+  // Compute all surah positions (golden-angle spiral)
+  const pos = [];
+  for (let s = 1; s <= SURAH_COUNT; s++) {
+    const angle = s * GA;
+    const rr = radius * 0.15 + Math.sqrt(s / SURAH_COUNT) * radius * 0.75;
+    pos[s] = { x: cx + Math.cos(angle) * rr, y: cy + Math.sin(angle) * rr };
+  }
+
+  // Faint chords between Muqatta'at surahs sharing a group
+  GROUPS.forEach((g, gi) => {
+    if (g.chapters.length < 2) return;
+    const isHi = hoveredGroup === gi || lockedGroup === gi;
+    const color = groupColor(g, isHi ? 0.55 : 0.1);
+    const chs = g.chapters;
+    for (let i = 0; i < chs.length - 1; i++) {
+      const a = pos[chs[i]], b = pos[chs[i + 1]];
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = isHi ? 1.2 : 0.4;
+      ctx.stroke();
+    }
+  });
+
+  // Draw the 114 surahs as a starfield
+  for (let s = 1; s <= SURAH_COUNT; s++) {
+    const p = pos[s];
+    const gi = chapterToGroup[s];
+    if (gi === undefined) {
+      // Non-Muqatta'at: dim gray star
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1, 0, TAU);
+      ctx.fillStyle = 'rgba(224,220,208,0.22)';
+      ctx.fill();
+    } else {
+      const g = GROUPS[gi];
+      const isHi = hoveredGroup === gi || lockedGroup === gi;
+      const color = groupColor(g, isHi ? 1 : 0.82);
+      const size = isHi ? 4.5 : 3;
+
+      // Glow halo
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 3);
+      grad.addColorStop(0, groupColor(g, isHi ? 0.5 : 0.22));
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 3, 0, TAU);
+      ctx.fill();
+
+      // Core
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, TAU);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  }
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText("29 OF 114 SURAHS CARRY THE PATTERN", 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText("golden-angle spiral · surahs numbered 1 → 114", 20, 38);
+  ctx.fillText("bright stars = Muqatta'at    dim stars = others", 20, 52);
+}
+
+// ═══════════════════════════════════════════
+// TIERS — probability decomposition
+// ═══════════════════════════════════════════
+function renderTiers(ctx) {
+  const tier1Order = [0, 3, 4, 5, 6, 7, 8, 9];
+  const tier2Order = [1, 2, 10, 11, 12];
+  const leftX = W * 0.28;
+  const rightX = W * 0.72;
+
+  // Central dashed divider
+  ctx.setLineDash([2, 6]);
+  ctx.beginPath();
+  ctx.moveTo(cx, 100);
+  ctx.lineTo(cx, H - 130);
+  ctx.strokeStyle = 'rgba(201,168,76,0.12)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Tier 1 header
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 15px Inter';
+  ctx.fillText('TIER 1', leftX, 42);
+  ctx.fillStyle = 'rgba(245,208,96,0.55)';
+  ctx.font = '600 10px Inter';
+  ctx.fillText('ZERO FITTING', leftX, 60);
+  ctx.fillStyle = 'rgba(245,208,96,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('pure consonants + plain alif', leftX, 80);
+  ctx.fillText('identical in every manuscript', leftX, 94);
+
+  // Tier 2 header
+  ctx.fillStyle = 'rgba(96,245,224,0.95)';
+  ctx.font = '600 15px Inter';
+  ctx.fillText('TIER 2', rightX, 42);
+  ctx.fillStyle = 'rgba(96,245,224,0.55)';
+  ctx.font = '600 10px Inter';
+  ctx.fillText('CONSTRAINED', rightX, 60);
+  ctx.fillStyle = 'rgba(96,245,224,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('requires Uthmani alif subsets', rightX, 80);
+  ctx.fillText('not load-bearing', rightX, 94);
+
+  // Tier 1 rows
+  tier1Order.forEach((gi) => {
+    const g = GROUPS[gi];
+    const gp = groupPositions[gi];
+    const isHi = hoveredGroup === gi || lockedGroup === gi;
+
+    if (isHi) {
+      ctx.fillStyle = 'rgba(245,208,96,0.08)';
+      ctx.fillRect(leftX - 150, gp.y - 20, 300, 40);
+    }
+
+    drawStar(ctx, leftX - 115, gp.y, 9, 4, 6, groupColor(g, isHi ? 1 : 0.78), null, 1);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = isHi ? 'rgba(245,208,96,1)' : 'rgba(245,208,96,0.85)';
+    ctx.font = '600 12px Inter';
+    ctx.fillText(g.latin, leftX - 95, gp.y);
+
+    ctx.fillStyle = 'rgba(245,208,96,0.5)';
+    ctx.font = '300 10px Inter';
+    ctx.textAlign = 'right';
+    ctx.fillText(g.count.toLocaleString() + '  ÷19 = ' + g.div19, leftX + 135, gp.y);
+  });
+
+  // Tier 2 rows
+  tier2Order.forEach((gi) => {
+    const g = GROUPS[gi];
+    const gp = groupPositions[gi];
+    const isHi = hoveredGroup === gi || lockedGroup === gi;
+
+    if (isHi) {
+      ctx.fillStyle = 'rgba(96,245,224,0.08)';
+      ctx.fillRect(rightX - 150, gp.y - 20, 300, 40);
+    }
+
+    drawStar(ctx, rightX - 115, gp.y, 9, 4, 6, groupColor(g, isHi ? 1 : 0.78), null, 1);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = isHi ? 'rgba(96,245,224,1)' : 'rgba(96,245,224,0.85)';
+    ctx.font = '600 12px Inter';
+    ctx.fillText(g.latin, rightX - 95, gp.y);
+
+    ctx.fillStyle = 'rgba(96,245,224,0.5)';
+    ctx.font = '300 10px Inter';
+    ctx.textAlign = 'right';
+    ctx.fillText(g.count.toLocaleString() + '  ÷19 = ' + g.div19, rightX + 135, gp.y);
+  });
+
+  // Bottom probability statements
+  const by = H - 80;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(245,208,96,0.9)';
+  ctx.font = '600 14px Inter';
+  ctx.fillText('(1 / 19)⁸  ≈  1 in 17 billion', leftX, by);
+  ctx.fillStyle = 'rgba(245,208,96,0.45)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('zero parameters · zero fitting', leftX, by + 18);
+
+  ctx.fillStyle = 'rgba(96,245,224,0.9)';
+  ctx.font = '600 14px Inter';
+  ctx.fillText('reject all 5  →  core result holds', rightX, by);
+  ctx.fillStyle = 'rgba(96,245,224,0.45)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('supporting · not load-bearing', rightX, by + 18);
+}
+
+// ═══════════════════════════════════════════
+// PRIMES — the first 29 primes, ending at 109 = P(29)
+// ═══════════════════════════════════════════
+function renderPrimes(ctx) {
+  const primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109];
+  const positions = primes.map((p, i) => {
+    // Reversed: i=0 (prime 2) sits at the OUTER edge, i=last (prime 109) at the CENTER.
+    // The walk through the primes is now a descent — a downward spiral collapsing inward.
+    const t = i / (primes.length - 1);
+    const angle = -t * TAU * 1.5 - Math.PI / 2;  // counterclockwise so it reads as descent
+    const rr = radius * 0.84 - t * radius * 0.62;
+    return { p, idx: i, x: cx + Math.cos(angle) * rr, y: cy + Math.sin(angle) * rr };
+  });
+
+  // Trail connecting the primes
+  ctx.beginPath();
+  positions.forEach((pos, i) => { i === 0 ? ctx.moveTo(pos.x, pos.y) : ctx.lineTo(pos.x, pos.y); });
+  ctx.strokeStyle = 'rgba(201,168,76,0.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Moving glow comets traveling along the trail
+  const flowT = (animTime * 0.004) % 1;
+  for (let ff = 0; ff < 3; ff++) {
+    const t = (flowT + ff * 0.333) % 1;
+    const idx = Math.floor(t * (primes.length - 1));
+    const next = Math.min(idx + 1, primes.length - 1);
+    const frac = t * (primes.length - 1) - idx;
+    const fx = lerp(positions[idx].x, positions[next].x, frac);
+    const fy = lerp(positions[idx].y, positions[next].y, frac);
+    const grad = ctx.createRadialGradient(fx, fy, 0, fx, fy, 14);
+    grad.addColorStop(0, 'rgba(201,168,76,0.5)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(fx, fy, 14, 0, TAU);
+    ctx.fill();
+  }
+
+  // Draw each prime
+  positions.forEach(pos => {
+    const is19 = pos.p === 19;
+    const is29 = pos.p === 29;
+    const is109 = pos.p === 109;
+    const isSpecial = is19 || is29 || is109;
+
+    let color, glow, size;
+    if (is19) { color = 'rgba(245,208,96,1)'; glow = 'rgba(245,208,96,0.55)'; size = 13; }
+    else if (is109) { color = 'rgba(96,245,224,1)'; glow = 'rgba(96,245,224,0.55)'; size = 13; }
+    else if (is29) { color = 'rgba(201,168,76,0.95)'; glow = 'rgba(201,168,76,0.4)'; size = 9; }
+    else { color = 'rgba(224,220,208,0.55)'; glow = null; size = 3; }
+
+    if (glow) {
+      const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, size * 3);
+      grad.addColorStop(0, glow);
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, size * 3, 0, TAU);
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, size, 0, TAU);
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    // Labels
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (isSpecial) {
+      ctx.fillStyle = color;
+      ctx.font = '600 13px Inter';
+      ctx.fillText(pos.p, pos.x, pos.y + size + 16);
+      let note = '';
+      if (is19) note = '8th prime · declared in 74:30';
+      else if (is29) note = "count of Muqatta'at surahs";
+      else if (is109) note = '29th prime · P(29)';
+      ctx.fillStyle = color.replace('1)', '0.7)').replace('0.95)', '0.6)');
+      ctx.font = '300 10px Inter';
+      ctx.fillText(note, pos.x, pos.y + size + 32);
+    } else {
+      ctx.fillStyle = 'rgba(224,220,208,0.35)';
+      ctx.font = '300 9px Inter';
+      ctx.fillText(pos.p, pos.x, pos.y + size + 10);
+    }
+  });
+
+  // Corner caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('THE FIRST 29 PRIMES', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('19 is the 8th · 109 is the 29th · 29 surahs carry the pattern', 20, 38);
+}
+
+// ═══════════════════════════════════════════
+// CODEX — the alif battle
+// ═══════════════════════════════════════════
+function renderCodex(ctx) {
+  const alifY = cy - 40;
+  const pulse = 1 + Math.sin(animTime * 0.02) * 0.05;
+
+  // Glow behind the alif
+  const gGrad = ctx.createRadialGradient(cx, alifY, 0, cx, alifY, 80);
+  gGrad.addColorStop(0, 'rgba(201,168,76,0.35)');
+  gGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = gGrad;
+  ctx.beginPath();
+  ctx.arc(cx, alifY, 80, 0, TAU);
+  ctx.fill();
+
+  // The alif itself
+  ctx.fillStyle = 'rgba(245,208,96,1)';
+  ctx.font = `700 ${Math.floor(110 * pulse)}px Amiri, serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('ا', cx, alifY);
+
+  // Labels under alif
+  ctx.fillStyle = 'rgba(201,168,76,0.75)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('ALIF', cx, alifY + 95);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('one 7th-century stroke · split 7 ways by later grammarians', cx, alifY + 112);
+
+  // Left side: scriptio defectiva (removes alifs)
+  const leftStart = cx - 290;
+  const leftEnd = cx - 100;
+  const flowT = (animTime * 0.8) % 100;
+
+  for (let i = 0; i < 7; i++) {
+    const t = ((i * 14.3 + flowT) / 100) % 1;
+    const x = lerp(leftStart, leftEnd, t);
+    const alpha = Math.sin(t * Math.PI) * 0.9;
+    ctx.strokeStyle = `rgba(224,75,96,${alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x - 5, alifY);
+    ctx.lineTo(x + 5, alifY);
+    ctx.stroke();
+  }
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(224,75,96,0.9)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('SCRIPTIO DEFECTIVA', 30, alifY - 18);
+  ctx.fillStyle = 'rgba(224,75,96,0.55)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('medial alifs omitted', 30, alifY - 2);
+  ctx.fillText('rate: ~1 per verse', 30, alifY + 12);
+  ctx.fillText('net: REMOVES strokes', 30, alifY + 26);
+
+  // Right side: no hamza distinction (adds alifs)
+  const rightStart = cx + 100;
+  const rightEnd = cx + 290;
+
+  for (let i = 0; i < 7; i++) {
+    const t = ((i * 14.3 + flowT) / 100) % 1;
+    const x = lerp(rightStart, rightEnd, t);
+    const alpha = Math.sin(t * Math.PI) * 0.9;
+    ctx.strokeStyle = `rgba(96,245,224,${alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x - 5, alifY);
+    ctx.lineTo(x + 5, alifY);
+    ctx.moveTo(x, alifY - 5);
+    ctx.lineTo(x, alifY + 5);
+    ctx.stroke();
+  }
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(96,245,224,0.9)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('NO HAMZA DISTINCTION', W - 30, alifY - 18);
+  ctx.fillStyle = 'rgba(96,245,224,0.55)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('hamza alifs = bare strokes', W - 30, alifY - 2);
+  ctx.fillText('365 added in Surah 10 alone', W - 30, alifY + 12);
+  ctx.fillText('net: ADDS strokes', W - 30, alifY + 26);
+
+  // Checksum box at the bottom
+  const csY = H - 140;
+  const boxW = 320, boxH = 72;
+  ctx.strokeStyle = 'rgba(201,168,76,0.55)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(cx - boxW / 2, csY, boxW, boxH);
+  // inner faint fill
+  ctx.fillStyle = 'rgba(201,168,76,0.04)';
+  ctx.fillRect(cx - boxW / 2, csY, boxW, boxH);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 10px Inter';
+  ctx.fillText('THE CHECKSUM', cx, csY - 12);
+
+  ctx.fillStyle = 'rgba(245,208,96,1)';
+  ctx.font = '600 22px Inter';
+  ctx.fillText('39,349 = 19² × P(29)', cx, csY + 30);
+
+  ctx.fillStyle = 'rgba(201,168,76,0.5)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('specifies the correct encoding per group', cx, csY + 52);
+
+  // Thesis at the very bottom
+  ctx.fillStyle = 'rgba(224,220,208,0.55)';
+  ctx.font = '300 italic 12px Inter';
+  ctx.fillText('The manuscript is the noisy channel. The checksum is the ground truth.', cx, H - 25);
+}
+
+// ═══════════════════════════════════════════
+// KEYSTONE — the equation, pulsing
+// ═══════════════════════════════════════════
+function renderKeystone(ctx) {
+  const eqY = cy - 10;
+  const t = animTime * 0.015;
+
+  // Top label
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('THE KEYSTONE', cx, 50);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText("two measurements · one number · self-referential", cx, 68);
+
+  // Two sources converging on 39,349 (left of equals)
+  const lhsX = cx - 200;
+  const pulse0 = 0.85 + Math.sin(t) * 0.15;
+
+  ctx.fillStyle = `rgba(201,168,76,${pulse0 * 0.55})`;
+  ctx.font = '300 11px Inter';
+  ctx.textAlign = 'right';
+  ctx.fillText('letter count · 13 groups', lhsX + 180, eqY - 64);
+  ctx.fillText('word count · 29 surahs', lhsX + 180, eqY + 64);
+
+  // Curved arrows from the sources into 39,349
+  ctx.strokeStyle = `rgba(201,168,76,${pulse0 * 0.35})`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(lhsX + 185, eqY - 58);
+  ctx.quadraticCurveTo(lhsX + 200, eqY - 30, lhsX + 150, eqY - 18);
+  ctx.moveTo(lhsX + 185, eqY + 58);
+  ctx.quadraticCurveTo(lhsX + 200, eqY + 30, lhsX + 150, eqY + 18);
+  ctx.stroke();
+
+  // 39,349
+  ctx.fillStyle = `rgba(201,168,76,${pulse0})`;
+  ctx.font = '600 62px Inter';
+  ctx.textAlign = 'right';
+  ctx.fillText('39,349', cx - 120, eqY);
+
+  // = sign
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '300 44px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('=', cx - 80, eqY);
+
+  // 19² — gold pulse
+  const pulse1 = 0.85 + Math.sin(t + 1.5) * 0.15;
+  ctx.fillStyle = `rgba(245,208,96,${pulse1})`;
+  ctx.font = '600 54px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('19²', cx - 10, eqY);
+
+  // × sign
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '300 36px Inter';
+  ctx.fillText('×', cx + 55, eqY);
+
+  // P(29) — cyan pulse
+  const pulse2 = 0.85 + Math.sin(t + 3) * 0.15;
+  ctx.fillStyle = `rgba(96,245,224,${pulse2})`;
+  ctx.font = '600 54px Inter';
+  ctx.fillText('P(29)', cx + 145, eqY);
+
+  // Expansions below
+  ctx.fillStyle = 'rgba(245,208,96,0.55)';
+  ctx.font = '300 12px Inter';
+  ctx.fillText('19 × 19 = 361', cx - 10, eqY + 52);
+  ctx.fillStyle = 'rgba(96,245,224,0.55)';
+  ctx.fillText('29th prime = 109', cx + 145, eqY + 52);
+
+  // Verification line
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '300 italic 15px Inter';
+  ctx.fillText('361 × 109 = 39,349  ✓', cx + 55, eqY + 100);
+
+  // Self-reference note
+  ctx.fillStyle = 'rgba(224,220,208,0.4)';
+  ctx.font = '300 11px Inter';
+  ctx.fillText("29 is also the count of Muqatta'at surahs — the number closes on itself", cx, H - 70);
+
+  // Declaration
+  ctx.fillStyle = 'rgba(201,168,76,0.5)';
+  ctx.font = '300 italic 11px Inter';
+  ctx.fillText('"Over it are nineteen." — Quran 74:30', cx, H - 42);
+}
+
+// ═══════════════════════════════════════════
+// SPHERE — 114 surahs on a rotating Fibonacci sphere
+// ═══════════════════════════════════════════
+function renderSphere(ctx) {
+  camera3D.angle += 0.004;
+
+  const SURAH_COUNT = 114;
+  const sphereR = radius * 0.7;
+
+  // chapter → group map
+  const c2g = {};
+  GROUPS.forEach((g, gi) => g.chapters.forEach(ch => { c2g[ch] = gi; }));
+
+  // Wireframe latitude rings
+  for (let lat = -3; lat <= 3; lat++) {
+    if (lat === 0) continue;
+    const yy = (lat / 4) * sphereR;
+    const ringR = Math.sqrt(Math.max(0, sphereR * sphereR - yy * yy));
+    const segs = 48;
+    ctx.beginPath();
+    for (let i = 0; i <= segs; i++) {
+      const a = (i / segs) * TAU;
+      const proj = project3D(ringR * Math.cos(a), yy, ringR * Math.sin(a));
+      i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+    }
+    ctx.strokeStyle = 'rgba(201,168,76,0.05)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+  // Equator (slightly brighter)
+  {
+    const segs = 64;
+    ctx.beginPath();
+    for (let i = 0; i <= segs; i++) {
+      const a = (i / segs) * TAU;
+      const proj = project3D(sphereR * Math.cos(a), 0, sphereR * Math.sin(a));
+      i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+    }
+    ctx.strokeStyle = 'rgba(201,168,76,0.1)';
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+  }
+  // Meridian lines
+  for (let m = 0; m < 8; m++) {
+    const segs = 32;
+    ctx.beginPath();
+    for (let i = 0; i <= segs; i++) {
+      const phi = (i / segs) * Math.PI - Math.PI / 2;
+      const a = (m / 8) * TAU;
+      const proj = project3D(
+        sphereR * Math.cos(phi) * Math.cos(a),
+        sphereR * Math.sin(phi),
+        sphereR * Math.cos(phi) * Math.sin(a)
+      );
+      i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+    }
+    ctx.strokeStyle = 'rgba(201,168,76,0.04)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // All 114 surah points
+  const projected = [];
+  for (let s = 1; s <= SURAH_COUNT; s++) {
+    const phi = Math.acos(1 - 2 * (s - 0.5) / SURAH_COUNT);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (s - 0.5);
+    const px = sphereR * Math.cos(theta) * Math.sin(phi);
+    const py = sphereR * Math.sin(theta) * Math.sin(phi);
+    const pz = sphereR * Math.cos(phi);
+    const proj = project3D(px, py, pz);
+    projected.push({ surah: s, group: c2g[s], ...proj });
+  }
+
+  // Sort back-to-front for proper occlusion
+  projected.sort((a, b) => b.z - a.z);
+
+  // Track per-group "front-most" projected point for hover
+  const groupFront = GROUPS.map(() => ({ x: 0, y: 0, z: -Infinity }));
+
+  // Draw each surah
+  projected.forEach(p => {
+    if (p.group === undefined) {
+      const sz = Math.max(0.5, 1.2 * p.scale);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz, 0, TAU);
+      ctx.fillStyle = `rgba(224,220,208,${0.15 + p.scale * 0.18})`;
+      ctx.fill();
+    } else {
+      const g = GROUPS[p.group];
+      const isHi = hoveredGroup === p.group || lockedGroup === p.group;
+      const sz = (isHi ? 5 : 3.5) * p.scale;
+      const color = groupColor(g, isHi ? 1 : 0.85);
+
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz * 3);
+      grad.addColorStop(0, groupColor(g, isHi ? 0.55 : 0.28));
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz * 3, 0, TAU);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz, 0, TAU);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // Track front-most for hover
+      if (p.z > groupFront[p.group].z) {
+        groupFront[p.group] = { x: p.x, y: p.y, z: p.z };
+      }
+    }
+  });
+
+  // Update group hover positions after the transition completes
+  if (transitionProgress >= 1) {
+    groupFront.forEach((c, i) => {
+      groupPositions[i].x = c.x;
+      groupPositions[i].y = c.y;
+      groupPositions[i].r = 8;
+    });
+  }
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('SPHERE OF SURAHS', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('114 surahs · Fibonacci sphere · auto-rotating', 20, 38);
+  ctx.fillText("29 Muqatta'at illuminated", 20, 52);
+}
+
+// ═══════════════════════════════════════════
+// HELIX — Tier 1 / Tier 2 as a double helix
+// ═══════════════════════════════════════════
+function renderHelix(ctx) {
+  camera3D.angle += 0.005;
+
+  const helixR = radius * 0.4;
+  const helixH = radius * 1.3;
+  const turns = 1.5;
+  const segs = 80;
+
+  // Draw a helical strand
+  function drawStrand(phaseOffset, color) {
+    const pts3 = [];
+    for (let i = 0; i <= segs; i++) {
+      const t = i / segs;
+      const angle = t * TAU * turns + phaseOffset;
+      pts3.push({
+        x: helixR * Math.cos(angle),
+        y: (t - 0.5) * helixH,
+        z: helixR * Math.sin(angle)
+      });
+    }
+    const proj = pts3.map(p => project3D(p.x, p.y, p.z));
+    ctx.beginPath();
+    proj.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  drawStrand(0, 'rgba(245,208,96,0.4)');
+  drawStrand(Math.PI, 'rgba(96,245,224,0.4)');
+
+  // Draw rungs between strands at evenly spaced points
+  const rungCount = 13;
+  for (let i = 0; i < rungCount; i++) {
+    const t = (i + 0.5) / rungCount;
+    const angle1 = t * TAU * turns;
+    const angle2 = angle1 + Math.PI;
+    const y3 = (t - 0.5) * helixH;
+    const a = project3D(helixR * Math.cos(angle1), y3, helixR * Math.sin(angle1));
+    const b = project3D(helixR * Math.cos(angle2), y3, helixR * Math.sin(angle2));
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = 'rgba(201,168,76,0.1)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Place groups along their strand
+  const tier1 = GROUPS.filter(g => g.tier === 1);
+  const tier2 = GROUPS.filter(g => g.tier === 2);
+
+  function placeGroups(groups, phaseOffset) {
+    return groups.map((g, i) => {
+      const t = (i + 0.5) / groups.length;
+      const angle = t * TAU * turns + phaseOffset;
+      const proj = project3D(
+        helixR * Math.cos(angle),
+        (t - 0.5) * helixH,
+        helixR * Math.sin(angle)
+      );
+      return { ...proj, group: g, gi: GROUPS.indexOf(g) };
+    });
+  }
+
+  const allNodes = [...placeGroups(tier1, 0), ...placeGroups(tier2, Math.PI)];
+  // Depth sort
+  allNodes.sort((a, b) => b.z - a.z);
+
+  allNodes.forEach(node => {
+    const g = node.group;
+    const isHi = hoveredGroup === node.gi || lockedGroup === node.gi;
+    const sz = (isHi ? 11 : 8) * node.scale;
+    const color = groupColor(g, isHi ? 1 : 0.85);
+
+    const grad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, sz * 2.5);
+    grad.addColorStop(0, groupColor(g, isHi ? 0.55 : 0.28));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, sz * 2.5, 0, TAU);
+    ctx.fill();
+
+    drawStar(ctx, node.x, node.y, sz, sz * 0.4, 6, color, null, 1);
+
+    if (transitionProgress >= 1) {
+      groupPositions[node.gi].x = node.x;
+      groupPositions[node.gi].y = node.y;
+      groupPositions[node.gi].r = sz;
+    }
+  });
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('TIER HELIX', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('two strands · Tier 1 (gold) and Tier 2 (cyan)', 20, 38);
+  ctx.fillText('twist around the same axis', 20, 52);
+}
+
+// ═══════════════════════════════════════════
+// ORBITS — 13 groups orbit the central 19
+// ═══════════════════════════════════════════
+function renderOrbits(ctx) {
+  camera3D.angle += 0.0035;
+
+  // Sort groups by count for orbital radius (smallest = closest)
+  const sorted = [...GROUPS].map((g, i) => ({ g, i })).sort((a, b) => a.g.count - b.g.count);
+
+  // Draw orbital ellipses, each on its own tilted plane
+  sorted.forEach((s, idx) => {
+    const orbitR = radius * 0.18 + (idx / GROUPS.length) * radius * 0.72;
+    const planeTilt = (idx % 2 === 0 ? 1 : -1) * (0.08 + (idx / GROUPS.length) * 0.28);
+    const segs = 64;
+    ctx.beginPath();
+    for (let i = 0; i <= segs; i++) {
+      const a = (i / segs) * TAU;
+      const ox = orbitR * Math.cos(a);
+      const oz = orbitR * Math.sin(a);
+      // Tilt the orbital plane around the X axis
+      const oy = oz * Math.sin(planeTilt);
+      const oz2 = oz * Math.cos(planeTilt);
+      const proj = project3D(ox, oy, oz2);
+      i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+    }
+    ctx.strokeStyle = groupColor(s.g, 0.18);
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  // Compute current orbital positions (each group orbits at its own rate)
+  const orbiting = sorted.map((s, idx) => {
+    const orbitR = radius * 0.18 + (idx / GROUPS.length) * radius * 0.72;
+    const planeTilt = (idx % 2 === 0 ? 1 : -1) * (0.08 + (idx / GROUPS.length) * 0.28);
+    const phase = (animTime * 0.001 * (1.2 + idx * 0.15)) % TAU;
+    const ox = orbitR * Math.cos(phase);
+    const oz = orbitR * Math.sin(phase);
+    const oy = oz * Math.sin(planeTilt);
+    const oz2 = oz * Math.cos(planeTilt);
+    const proj = project3D(ox, oy, oz2);
+    return { ...proj, gi: s.i, group: s.g };
+  });
+
+  // Central 19-pointed star
+  const centerProj = project3D(0, 0, 0);
+  const cs = centerProj.scale;
+  drawStar(ctx, centerProj.x, centerProj.y, 32 * cs, 14 * cs, 19, 'rgba(201,168,76,0.6)', 'rgba(201,168,76,0.08)', 1.5);
+  drawStar(ctx, centerProj.x, centerProj.y, 22 * cs, 10 * cs, 19, 'rgba(201,168,76,0.3)', null, 0.5);
+
+  // Glow around center
+  const cgrad = ctx.createRadialGradient(centerProj.x, centerProj.y, 0, centerProj.x, centerProj.y, 60 * cs);
+  cgrad.addColorStop(0, 'rgba(201,168,76,0.15)');
+  cgrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = cgrad;
+  ctx.beginPath();
+  ctx.arc(centerProj.x, centerProj.y, 60 * cs, 0, TAU);
+  ctx.fill();
+
+  // Sort orbiting nodes by depth and draw
+  orbiting.sort((a, b) => b.z - a.z);
+  orbiting.forEach(node => {
+    const g = node.group;
+    const isHi = hoveredGroup === node.gi || lockedGroup === node.gi;
+    const sz = (isHi ? 12 : 8) * node.scale;
+    const color = groupColor(g, isHi ? 1 : 0.85);
+
+    const grad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, sz * 2.5);
+    grad.addColorStop(0, groupColor(g, isHi ? 0.55 : 0.28));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, sz * 2.5, 0, TAU);
+    ctx.fill();
+
+    drawStar(ctx, node.x, node.y, sz, sz * 0.4, 6, color, null, 1);
+
+    if (transitionProgress >= 1) {
+      groupPositions[node.gi].x = node.x;
+      groupPositions[node.gi].y = node.y;
+      groupPositions[node.gi].r = sz;
+    }
+  });
+
+  // 19 label at center
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = `600 ${Math.floor(18 * cs)}px Inter`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('19', centerProj.x, centerProj.y);
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('ORBITAL SYSTEM', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('13 groups orbit 19', 20, 38);
+  ctx.fillText('orbit radius ∝ letter count · tilted planes', 20, 52);
+}
+
+// ═══════════════════════════════════════════
+// LATTICE — 19 × 19 × P(29) volume of cells
+// ═══════════════════════════════════════════
+function renderLattice(ctx) {
+  camera3D.angle += 0.003;
+
+  const dimX = 19, dimY = 19, dimZ = 109;
+  const spacing = 7;
+  const offX = -(dimX - 1) * spacing / 2;
+  const offY = -(dimY - 1) * spacing / 2;
+  const offZ = -(dimZ - 1) * spacing / 2;
+
+  // Render only a subset of layers for performance — every 7th
+  const layerStep = 7;
+  const points = [];
+  for (let zi = 0; zi < dimZ; zi += layerStep) {
+    const z3 = offZ + zi * spacing;
+    // For non-edge layers, render only the perimeter to keep things fast
+    const isEdge = (zi === 0 || zi >= dimZ - layerStep);
+    for (let yi = 0; yi < dimY; yi++) {
+      const y3 = offY + yi * spacing;
+      const yEdge = (yi === 0 || yi === dimY - 1);
+      for (let xi = 0; xi < dimX; xi++) {
+        const xEdge = (xi === 0 || xi === dimX - 1);
+        if (!isEdge && !yEdge && !xEdge) continue; // hollow shell
+        const x3 = offX + xi * spacing;
+        const proj = project3D(x3, y3, z3);
+        // Pseudo-group id from position for color variety
+        const gid = (xi * 31 + yi * 17 + zi * 13) % NUM_GROUPS;
+        points.push({ ...proj, gid, isEdge: isEdge || (xEdge && yEdge) });
+      }
+    }
+  }
+
+  // Sort back-to-front
+  points.sort((a, b) => b.z - a.z);
+
+  // Draw each cell
+  points.forEach(p => {
+    const g = GROUPS[p.gid];
+    const sz = Math.max(0.5, 1.6 * p.scale);
+    const alpha = (0.25 + p.scale * 0.4) * (p.isEdge ? 1 : 0.6);
+    ctx.fillStyle = groupColor(g, alpha);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, sz, 0, TAU);
+    ctx.fill();
+  });
+
+  // Outline the bounding box of the lattice
+  const corners = [
+    [offX, offY, offZ], [offX + (dimX-1)*spacing, offY, offZ],
+    [offX + (dimX-1)*spacing, offY + (dimY-1)*spacing, offZ], [offX, offY + (dimY-1)*spacing, offZ],
+    [offX, offY, offZ + (dimZ-1)*spacing], [offX + (dimX-1)*spacing, offY, offZ + (dimZ-1)*spacing],
+    [offX + (dimX-1)*spacing, offY + (dimY-1)*spacing, offZ + (dimZ-1)*spacing], [offX, offY + (dimY-1)*spacing, offZ + (dimZ-1)*spacing]
+  ].map(c => project3D(c[0], c[1], c[2]));
+  const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  ctx.strokeStyle = 'rgba(201,168,76,0.18)';
+  ctx.lineWidth = 0.5;
+  edges.forEach(e => {
+    ctx.beginPath();
+    ctx.moveTo(corners[e[0]].x, corners[e[0]].y);
+    ctx.lineTo(corners[e[1]].x, corners[e[1]].y);
+    ctx.stroke();
+  });
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('LATTICE · 19 × 19 × P(29)', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('39,349 cells in a 3D volume', 20, 38);
+  ctx.fillText('the equation as physical space', 20, 52);
+}
+
+// ═══════════════════════════════════════════
+// TIMELINE — surahs 1-114 with Muqatta'at marked
+// ═══════════════════════════════════════════
+function renderTimeline(ctx) {
+  const xStart = 80;
+  const xEnd = W - 80;
+  const axisY = cy;
+  const SURAH_COUNT = 114;
+
+  // Chapter → group map
+  const c2g = {};
+  GROUPS.forEach((g, gi) => g.chapters.forEach(ch => { c2g[ch] = gi; }));
+
+  // Main axis line
+  ctx.beginPath();
+  ctx.moveTo(xStart, axisY);
+  ctx.lineTo(xEnd, axisY);
+  ctx.strokeStyle = 'rgba(201,168,76,0.25)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Tick marks every 10 surahs
+  for (let s = 10; s <= 110; s += 10) {
+    const x = lerp(xStart, xEnd, (s - 1) / 113);
+    ctx.beginPath();
+    ctx.moveTo(x, axisY - 4);
+    ctx.lineTo(x, axisY + 4);
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.4)';
+    ctx.font = '300 9px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(s, x, axisY + 16);
+  }
+
+  // Tier zone backgrounds
+  ctx.fillStyle = 'rgba(245,208,96,0.03)';
+  ctx.fillRect(xStart, axisY - 130, xEnd - xStart, 110);
+  ctx.fillStyle = 'rgba(96,245,224,0.03)';
+  ctx.fillRect(xStart, axisY + 30, xEnd - xStart, 110);
+
+  // Labels for tier zones
+  ctx.fillStyle = 'rgba(245,208,96,0.5)';
+  ctx.font = '600 10px Inter';
+  ctx.textAlign = 'left';
+  ctx.fillText('TIER 1 — encoding independent', xStart + 6, axisY - 122);
+  ctx.fillStyle = 'rgba(96,245,224,0.5)';
+  ctx.fillText('TIER 2 — encoding dependent', xStart + 6, axisY + 42);
+
+  // All 114 surahs as small marks
+  for (let s = 1; s <= SURAH_COUNT; s++) {
+    const x = lerp(xStart, xEnd, (s - 1) / 113);
+    const gi = c2g[s];
+    if (gi === undefined) {
+      ctx.beginPath();
+      ctx.arc(x, axisY, 1.5, 0, TAU);
+      ctx.fillStyle = 'rgba(224,220,208,0.3)';
+      ctx.fill();
+    } else {
+      const g = GROUPS[gi];
+      const isHi = hoveredGroup === gi || lockedGroup === gi;
+      const targetY = g.tier === 1 ? axisY - 60 : axisY + 60;
+      // Drop line from axis to group node
+      ctx.beginPath();
+      ctx.moveTo(x, axisY);
+      ctx.lineTo(x, targetY);
+      ctx.strokeStyle = groupColor(g, isHi ? 0.6 : 0.25);
+      ctx.lineWidth = isHi ? 1.2 : 0.5;
+      ctx.stroke();
+      // Mark on the axis itself
+      ctx.beginPath();
+      ctx.arc(x, axisY, 2, 0, TAU);
+      ctx.fillStyle = groupColor(g, 0.8);
+      ctx.fill();
+    }
+  }
+
+  // Group nodes (use animated positions)
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const isHi = hoveredGroup === i || lockedGroup === i;
+    const color = groupColor(g, isHi ? 1 : 0.85);
+
+    const grad = ctx.createRadialGradient(gp.x, gp.y, 0, gp.x, gp.y, gp.r * 2.5);
+    grad.addColorStop(0, groupColor(g, isHi ? 0.4 : 0.2));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r * 2.5, 0, TAU);
+    ctx.fill();
+
+    drawStar(ctx, gp.x, gp.y, gp.r, gp.r * 0.4, 6, color, null, 1);
+  });
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('READING ORDER', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText("114 surahs in order · 29 carry Muqatta'at letters", 20, 38);
+
+  // Legend on the right
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('node size ∝ chapters in group', W - 20, 38);
+}
+
+
+// ═══════════════════════════════════════════
+// TREE — hierarchical decomposition
+// ═══════════════════════════════════════════
+function renderTree(ctx) {
+  // Root: 39,349
+  const rootY = 80;
+  const tier2Y = 200;
+  const tier3Y = cy + 80;
+
+  // Root node
+  const rootR = 38;
+  const grad = ctx.createRadialGradient(cx, rootY, 0, cx, rootY, rootR * 1.6);
+  grad.addColorStop(0, 'rgba(245,208,96,0.35)');
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, rootY, rootR * 1.6, 0, TAU);
+  ctx.fill();
+
+  drawStar(ctx, cx, rootY, rootR, rootR * 0.45, 19, 'rgba(245,208,96,0.7)', 'rgba(245,208,96,0.05)', 1.5);
+
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 16px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('39,349', cx, rootY);
+  ctx.fillStyle = 'rgba(245,208,96,0.55)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('19² × P(29)', cx, rootY + rootR + 6);
+
+  // Tier-2 mid nodes: 19² and P(29)
+  const midL = cx - 110;
+  const midR = cx + 110;
+  const midRadius = 26;
+
+  // Connecting lines from root to mid
+  ctx.strokeStyle = 'rgba(201,168,76,0.35)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx, rootY + rootR * 0.7);
+  ctx.lineTo(midL, tier2Y - midRadius);
+  ctx.moveTo(cx, rootY + rootR * 0.7);
+  ctx.lineTo(midR, tier2Y - midRadius);
+  ctx.stroke();
+
+  // Mid: 19² (gold)
+  ctx.beginPath();
+  ctx.arc(midL, tier2Y, midRadius, 0, TAU);
+  ctx.fillStyle = 'rgba(245,208,96,0.12)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(245,208,96,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 14px Inter';
+  ctx.fillText('19² = 361', midL, tier2Y);
+
+  // Mid: P(29) (cyan)
+  ctx.beginPath();
+  ctx.arc(midR, tier2Y, midRadius, 0, TAU);
+  ctx.fillStyle = 'rgba(96,245,224,0.12)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(96,245,224,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(96,245,224,0.95)';
+  ctx.font = '600 14px Inter';
+  ctx.fillText('P(29) = 109', midR, tier2Y);
+
+  // Connecting arcs from mid nodes to each leaf group
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const isHi = hoveredGroup === i || lockedGroup === i;
+    const parent = g.tier === 1 ? midL : midR;
+    const parentColor = g.tier === 1 ? 'rgba(245,208,96,' : 'rgba(96,245,224,';
+
+    // Curved bezier from parent to leaf
+    ctx.beginPath();
+    ctx.moveTo(parent, tier2Y + midRadius);
+    const midX = (parent + gp.x) / 2;
+    const midPY = (tier2Y + gp.y) / 2;
+    ctx.bezierCurveTo(parent, midPY, gp.x, midPY, gp.x, gp.y - gp.r);
+    ctx.strokeStyle = parentColor + (isHi ? '0.7' : '0.22') + ')';
+    ctx.lineWidth = isHi ? 1.5 : 0.5;
+    ctx.stroke();
+  });
+
+  // Leaf nodes (groups)
+  GROUPS.forEach((g, i) => {
+    const gp = groupPositions[i];
+    const isHi = hoveredGroup === i || lockedGroup === i;
+    const color = groupColor(g, isHi ? 1 : 0.85);
+
+    const grad = ctx.createRadialGradient(gp.x, gp.y, 0, gp.x, gp.y, gp.r * 2.5);
+    grad.addColorStop(0, groupColor(g, isHi ? 0.45 : 0.22));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, gp.r * 2.5, 0, TAU);
+    ctx.fill();
+
+    drawStar(ctx, gp.x, gp.y, gp.r, gp.r * 0.4, 6, color, null, 1);
+
+    // Count below each leaf
+    ctx.fillStyle = groupColor(g, isHi ? 0.85 : 0.5);
+    ctx.font = '300 9px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(g.count.toLocaleString(), gp.x, gp.y + gp.r + 14);
+  });
+
+  // Sum row beneath
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '300 11px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('Σ all 13 group counts = 39,349  ↺  the tree closes on its root', cx, H - 60);
+
+  // Caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('FACTORIZATION TREE', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('39,349 → 19² × P(29) → 13 leaves', 20, 38);
+}
+
+// ═══════════════════════════════════════════
+// COSMOS — five-level fractal as nested 3D shells
+// ═══════════════════════════════════════════
+function renderCosmos(ctx) {
+  camera3D.angle += 0.0035;
+
+  const SURAH_COUNT = 114;
+  const c2g = {};
+  GROUPS.forEach((g, gi) => g.chapters.forEach(ch => { c2g[ch] = gi; }));
+
+  // Five level radii — outer shell to inner core
+  const R1 = radius * 0.95;  // Book
+  const R2 = radius * 0.74;  // Chapters
+  const R3 = radius * 0.54;  // Groups
+  const R4 = radius * 0.34;  // Multipliers
+  const R5 = radius * 0.14;  // Terminal core
+
+  // Helpers for sphere wireframe
+  function sphereWireframe(R, color, linew, density) {
+    // Latitude rings
+    for (let lat = -density; lat <= density; lat++) {
+      if (lat === 0) continue;
+      const yy = (lat / (density + 1)) * R;
+      const ringR = Math.sqrt(Math.max(0, R*R - yy*yy));
+      const segs = 32;
+      ctx.beginPath();
+      for (let i = 0; i <= segs; i++) {
+        const a = (i / segs) * TAU;
+        const proj = project3D(ringR * Math.cos(a), yy, ringR * Math.sin(a));
+        i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = linew;
+      ctx.stroke();
+    }
+    // Meridians
+    const merCount = Math.max(4, density * 2);
+    for (let m = 0; m < merCount; m++) {
+      const segs = 24;
+      ctx.beginPath();
+      for (let i = 0; i <= segs; i++) {
+        const phi = (i / segs) * Math.PI - Math.PI / 2;
+        const a = (m / merCount) * TAU;
+        const proj = project3D(
+          R * Math.cos(phi) * Math.cos(a),
+          R * Math.sin(phi),
+          R * Math.cos(phi) * Math.sin(a)
+        );
+        i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = linew;
+      ctx.stroke();
+    }
+    // Equator (slightly brighter)
+    const segs = 48;
+    ctx.beginPath();
+    for (let i = 0; i <= segs; i++) {
+      const a = (i / segs) * TAU;
+      const proj = project3D(R * Math.cos(a), 0, R * Math.sin(a));
+      i === 0 ? ctx.moveTo(proj.x, proj.y) : ctx.lineTo(proj.x, proj.y);
+    }
+    ctx.strokeStyle = color.replace(/[\d.]+\)$/, m => (parseFloat(m) * 1.6) + ')');
+    ctx.lineWidth = linew + 0.2;
+    ctx.stroke();
+  }
+
+  // Collect all the points we want to render across all levels,
+  // then depth-sort them as a single set so things blend correctly.
+  const allPoints = [];
+
+  // ─── LEVEL 1 — Book shell: 114 surahs as a faint distant starfield ───
+  for (let s = 1; s <= SURAH_COUNT; s++) {
+    const phi = Math.acos(1 - 2 * (s - 0.5) / SURAH_COUNT);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (s - 0.5);
+    const x3 = R1 * Math.cos(theta) * Math.sin(phi);
+    const y3 = R1 * Math.sin(theta) * Math.sin(phi);
+    const z3 = R1 * Math.cos(phi);
+    const proj = project3D(x3, y3, z3);
+    allPoints.push({
+      type: 'l1', x: proj.x, y: proj.y, z: proj.z, scale: proj.scale,
+      isMq: c2g[s] !== undefined
+    });
+  }
+
+  // ─── LEVEL 2 — Chapters shell: 29 Muqatta'at, on the smaller sphere ───
+  // Use Fibonacci-sphere placement of just the 29 surahs
+  const muqChapters = Object.keys(c2g).map(Number).sort((a, b) => a - b);
+  muqChapters.forEach((ch, idx) => {
+    const phi = Math.acos(1 - 2 * (idx + 0.5) / muqChapters.length);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (idx + 0.5);
+    const x3 = R2 * Math.cos(theta) * Math.sin(phi);
+    const y3 = R2 * Math.sin(theta) * Math.sin(phi);
+    const z3 = R2 * Math.cos(phi);
+    const proj = project3D(x3, y3, z3);
+    allPoints.push({
+      type: 'l2', x: proj.x, y: proj.y, z: proj.z, scale: proj.scale,
+      group: c2g[ch]
+    });
+  });
+
+  // ─── LEVEL 3 — Groups shell: 13 groups on the third sphere ───
+  // Fibonacci sphere placement so they spread cleanly
+  const groupNodes3D = [];
+  GROUPS.forEach((g, i) => {
+    const phi = Math.acos(1 - 2 * (i + 0.5) / NUM_GROUPS);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
+    const x3 = R3 * Math.cos(theta) * Math.sin(phi);
+    const y3 = R3 * Math.sin(theta) * Math.sin(phi);
+    const z3 = R3 * Math.cos(phi);
+    const proj = project3D(x3, y3, z3);
+    const node = { type: 'l3', x: proj.x, y: proj.y, z: proj.z, scale: proj.scale, gi: i };
+    allPoints.push(node);
+    groupNodes3D.push(node);
+  });
+
+  // ─── LEVEL 4 — Multipliers shell: 13 diamonds, same angular position
+  // as their corresponding L3 groups, but on the inner sphere ───
+  GROUPS.forEach((g, i) => {
+    const phi = Math.acos(1 - 2 * (i + 0.5) / NUM_GROUPS);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
+    const x3 = R4 * Math.cos(theta) * Math.sin(phi);
+    const y3 = R4 * Math.sin(theta) * Math.sin(phi);
+    const z3 = R4 * Math.cos(phi);
+    const proj = project3D(x3, y3, z3);
+    allPoints.push({
+      type: 'l4', x: proj.x, y: proj.y, z: proj.z, scale: proj.scale, gi: i
+    });
+  });
+
+  // ─── LEVEL 5 — Terminal: two anchor points (361 & 109) on the core ───
+  ['361', '109'].forEach((label, idx) => {
+    const a = idx === 0 ? Math.PI/2 : -Math.PI/2;
+    const x3 = R5 * Math.cos(a);
+    const y3 = R5 * Math.sin(a);
+    const proj = project3D(x3, y3, 0);
+    allPoints.push({
+      type: 'l5', x: proj.x, y: proj.y, z: proj.z, scale: proj.scale, label
+    });
+  });
+
+  // Center point (the 19 itself)
+  const centerProj = project3D(0, 0, 0);
+
+  // ── DRAW PASS 1: faint wireframe shells, back-to-front by radius
+  // We draw outer shells first so inner ones overlay them, but inside each
+  // shell the lines naturally render correctly because they're 1D.
+  sphereWireframe(R1, 'rgba(201,168,76,0.045)', 0.5, 2);
+  sphereWireframe(R2, 'rgba(201,168,76,0.075)', 0.5, 2);
+  sphereWireframe(R3, 'rgba(201,168,76,0.11)',  0.5, 2);
+  sphereWireframe(R4, 'rgba(201,168,76,0.16)',  0.5, 1);
+  sphereWireframe(R5, 'rgba(245,208,96,0.25)',  0.5, 1);
+
+  // ── DRAW PASS 2: depth-sort all points and render back-to-front
+  allPoints.sort((a, b) => b.z - a.z);
+
+  allPoints.forEach(p => {
+    if (p.type === 'l1') {
+      // Faint distant starfield — non-Muqatta'at dimmer than Muqatta'at
+      const sz = Math.max(0.4, (p.isMq ? 1.6 : 0.9) * p.scale);
+      const alpha = (p.isMq ? 0.45 : 0.18) * (0.5 + p.scale * 0.5);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz, 0, TAU);
+      ctx.fillStyle = `rgba(224,220,208,${alpha})`;
+      ctx.fill();
+    } else if (p.type === 'l2') {
+      // Muqatta'at chapter dot, colored by its group
+      const g = GROUPS[p.group];
+      const isHi = hoveredGroup === p.group || lockedGroup === p.group;
+      const sz = (isHi ? 3.5 : 2.5) * p.scale;
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz * 2.5);
+      grad.addColorStop(0, groupColor(g, isHi ? 0.55 : 0.3));
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz * 2.5, 0, TAU);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz, 0, TAU);
+      ctx.fillStyle = groupColor(g, isHi ? 1 : 0.85);
+      ctx.fill();
+    } else if (p.type === 'l3') {
+      // Group node — the most prominent shell
+      const g = GROUPS[p.gi];
+      const isHi = hoveredGroup === p.gi || lockedGroup === p.gi;
+      const sz = (isHi ? 9 : 6.5) * p.scale;
+      const color = groupColor(g, isHi ? 1 : 0.9);
+      // Glow halo
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz * 3);
+      grad.addColorStop(0, groupColor(g, isHi ? 0.55 : 0.3));
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz * 3, 0, TAU);
+      ctx.fill();
+      // 6-pointed star
+      drawStar(ctx, p.x, p.y, sz, sz * 0.4, 6, color, null, 1);
+    } else if (p.type === 'l4') {
+      // Multiplier diamond
+      const g = GROUPS[p.gi];
+      const isHi = hoveredGroup === p.gi || lockedGroup === p.gi;
+      const sz = (isHi ? 5 : 3.5) * p.scale;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y - sz);
+      ctx.lineTo(p.x + sz, p.y);
+      ctx.lineTo(p.x, p.y + sz);
+      ctx.lineTo(p.x - sz, p.y);
+      ctx.closePath();
+      ctx.fillStyle = groupColor(g, isHi ? 0.85 : 0.6);
+      ctx.fill();
+      ctx.strokeStyle = groupColor(g, isHi ? 1 : 0.85);
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    } else if (p.type === 'l5') {
+      // Terminal anchor: small bright gold dot
+      const sz = 5 * p.scale;
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz * 3);
+      grad.addColorStop(0, 'rgba(245,208,96,0.7)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz * 3, 0, TAU);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sz * 0.6, 0, TAU);
+      ctx.fillStyle = 'rgba(245,208,96,1)';
+      ctx.fill();
+      // Tiny label
+      ctx.fillStyle = 'rgba(245,208,96,0.8)';
+      ctx.font = `300 ${Math.floor(9 * p.scale)}px Inter`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.label, p.x, p.y + sz + 8);
+    }
+  });
+
+  // ── CENTER: 19-pointed star at the very core
+  const cs = centerProj.scale;
+  drawStar(ctx, centerProj.x, centerProj.y, R5 * 0.6 * cs, R5 * 0.27 * cs, 19,
+           'rgba(245,208,96,0.65)', 'rgba(245,208,96,0.08)', 1);
+  drawStar(ctx, centerProj.x, centerProj.y, R5 * 0.42 * cs, R5 * 0.19 * cs, 19,
+           'rgba(245,208,96,0.35)', null, 0.5);
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = `600 ${Math.floor(13 * cs)}px Inter`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('19', centerProj.x, centerProj.y);
+
+  // Update group hover positions to the projected L3 nodes (after transition)
+  if (transitionProgress >= 1) {
+    groupNodes3D.forEach(n => {
+      groupPositions[n.gi].x = n.x;
+      groupPositions[n.gi].y = n.y;
+      groupPositions[n.gi].r = 8;
+    });
+  }
+
+  // ── LEVEL LABELS in the right margin
+  // Sit at fixed screen positions and lead-line into the appropriate sphere.
+  const labelX = W - 160;
+  const labels = [
+    { y: 90,  num: '1', name: 'BOOK',        eq: '332,519 = 19 × 17,501', r: R1 },
+    { y: 150, num: '2', name: 'CHAPTERS',    eq: '39,349 = 19² × P(29)',   r: R2 },
+    { y: 210, num: '3', name: 'GROUPS',      eq: '13 totals · each ÷ 19',  r: R3 },
+    { y: 270, num: '4', name: 'MULTIPLIERS', eq: 'Σk = 19 × 109',          r: R4 },
+    { y: 330, num: '5', name: 'TERMINAL',    eq: '109 = P(29) · 361 = 19²',r: R5 }
+  ];
+
+  labels.forEach((l, idx) => {
+    const intensity = 0.45 + idx * 0.08;
+    // Lead line from label to the sphere's right edge
+    const sphereEdgeX = cx + l.r * 0.85;
+    ctx.beginPath();
+    ctx.moveTo(labelX - 6, l.y);
+    ctx.lineTo(sphereEdgeX, l.y);
+    ctx.strokeStyle = `rgba(201,168,76,${intensity * 0.35})`;
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([2, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label text
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = `rgba(201,168,76,${intensity + 0.2})`;
+    ctx.font = '600 10px Inter';
+    ctx.fillText(`L${l.num} · ${l.name}`, labelX, l.y - 6);
+    ctx.fillStyle = `rgba(201,168,76,${intensity})`;
+    ctx.font = '300 9px Inter';
+    ctx.fillText(l.eq, labelX, l.y + 6);
+  });
+
+  // ── HEADER caption
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('THE FIVE-LEVEL FRACTAL', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('19 organises the text at every structural scale', 20, 38);
+  ctx.fillText('outer shell = whole book · inner core = terminal factors', 20, 52);
+}
+
+// ═══════════════════════════════════════════
+// RESONANCE — two centuries, one standing wave
+// ═══════════════════════════════════════════
+function renderResonance(ctx) {
+  const t = animTime * 0.025;
+  const leftX = 110;
+  const rightX = W - 110;
+  const midY = cy;
+  const span = rightX - leftX;
+
+  // Two anchor labels
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.font = '600 13px Inter';
+  ctx.fillText('632 CE', leftX, midY + 70);
+  ctx.fillStyle = 'rgba(245,208,96,0.5)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('the encoding', leftX, midY + 88);
+
+  ctx.fillStyle = 'rgba(96,245,224,0.85)';
+  ctx.font = '600 13px Inter';
+  ctx.fillText('2026 CE', rightX, midY + 70);
+  ctx.fillStyle = 'rgba(96,245,224,0.5)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('the recognition', rightX, midY + 88);
+
+  // Glowing anchor points
+  function anchor(x, color, size, glowSize) {
+    const grad = ctx.createRadialGradient(x, midY, 0, x, midY, glowSize);
+    grad.addColorStop(0, color);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, midY, glowSize, 0, TAU);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, midY, size, 0, TAU);
+    ctx.fillStyle = color.replace(/[\d.]+\)$/, '1)');
+    ctx.fill();
+  }
+  anchor(leftX, 'rgba(245,208,96,0.45)', 6, 50);
+  anchor(rightX, 'rgba(96,245,224,0.45)', 6, 50);
+
+  // The standing wave between them — multiple harmonics
+  // Wave 1: fundamental
+  for (let layer = 0; layer < 5; layer++) {
+    const amp = 60 - layer * 8;
+    const freq = 4 + layer * 2;
+    const phase = layer * Math.PI / 3;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const tt = i / 200;
+      const x = lerp(leftX, rightX, tt);
+      // Standing wave: sin(kx) * sin(ωt)
+      const envelope = Math.sin(tt * Math.PI); // taper at endpoints
+      const wave = Math.sin(tt * Math.PI * freq) * Math.sin(t + phase);
+      const y = midY + wave * amp * envelope;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    const layerAlpha = 0.12 + layer * 0.06;
+    const hue = layer % 2 === 0 ? '201,168,76' : '180,200,150';
+    ctx.strokeStyle = `rgba(${hue},${layerAlpha})`;
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+
+  // Bright fundamental on top
+  ctx.beginPath();
+  for (let i = 0; i <= 240; i++) {
+    const tt = i / 240;
+    const x = lerp(leftX, rightX, tt);
+    const envelope = Math.sin(tt * Math.PI);
+    const wave = Math.sin(tt * Math.PI * 19) * Math.sin(t * 0.6);
+    const y = midY + wave * 55 * envelope;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = 'rgba(245,208,96,0.55)';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  // Nodes of the wave — pulse points where the wave crosses zero
+  const nodeCount = 19;
+  for (let n = 1; n < nodeCount; n++) {
+    const tt = n / nodeCount;
+    const x = lerp(leftX, rightX, tt);
+    const envelope = Math.sin(tt * Math.PI);
+    const pulse = 0.4 + Math.abs(Math.sin(t * 0.5 + n * 0.3)) * 0.6;
+    ctx.beginPath();
+    ctx.arc(x, midY, 1.5 * envelope * pulse, 0, TAU);
+    ctx.fillStyle = `rgba(245,208,96,${0.5 * envelope})`;
+    ctx.fill();
+  }
+
+  // Header
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('STANDING WAVE', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('two anchor points · one invariant', 20, 38);
+  ctx.fillText('1394 years · the wave does not move', 20, 52);
+
+  // Bottom thesis
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(224,220,208,0.5)';
+  ctx.font = '300 italic 12px Inter';
+  ctx.fillText('the structure is the same shape from both ends', cx, H - 60);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('19 = 19', cx, H - 38);
+}
+
+// ═══════════════════════════════════════════
+// ANCHORS — fixed points punching through the noise
+// ═══════════════════════════════════════════
+// Pre-generate stable noise field so it doesn't shimmer too much
+let anchorsNoise = null;
+function initAnchorsNoise() {
+  if (anchorsNoise) return;
+  anchorsNoise = [];
+  for (let i = 0; i < 600; i++) {
+    anchorsNoise.push({
+      x: Math.random(),
+      y: Math.random(),
+      seed: Math.random() * 100,
+      base: 0.06 + Math.random() * 0.12
+    });
+  }
+}
+
+function renderAnchors(ctx) {
+  initAnchorsNoise();
+  const t = animTime * 0.01;
+
+  // Background noise floor — drifting gray static
+  anchorsNoise.forEach(p => {
+    const x = p.x * W;
+    const y = 90 + p.y * (H - 200);
+    const flicker = 0.5 + Math.sin(t * 2 + p.seed) * 0.4;
+    const sz = 0.6 + Math.sin(t * 3 + p.seed * 2) * 0.4;
+    ctx.beginPath();
+    ctx.arc(x, y, sz, 0, TAU);
+    ctx.fillStyle = `rgba(150,150,160,${p.base * flicker})`;
+    ctx.fill();
+  });
+
+  // The fixed points — bright pillars piercing the noise
+  const anchors = [
+    { x: W * 0.18, name: 'PRIMES',     subtitle: 'numbers that never decompose',           color: 'rgba(245,208,96,', height: 280 },
+    { x: W * 0.36, name: 'MANDELBROT', subtitle: 'self-similar at every scale',            color: 'rgba(96,245,224,', height: 320 },
+    { x: W * 0.54, name: 'QURAN 19',   subtitle: '39,349 = 19² × P(29)',                    color: 'rgba(245,208,96,', height: 380, hero: true },
+    { x: W * 0.72, name: 'BACH',       subtitle: 'fugues that fold into themselves',       color: 'rgba(180,200,150,', height: 290 },
+    { x: W * 0.88, name: 'π',          subtitle: 'the same digits, forever',                color: 'rgba(96,245,224,', height: 260 }
+  ];
+
+  anchors.forEach(a => {
+    const baseY = H - 120;
+    const topY = baseY - a.height;
+    const pillarPulse = 0.85 + Math.sin(t * 1.5 + a.x * 0.01) * 0.15;
+
+    // Soft column of light
+    const wide = a.hero ? 35 : 22;
+    const grad = ctx.createLinearGradient(a.x - wide, 0, a.x + wide, 0);
+    grad.addColorStop(0, a.color + '0)');
+    grad.addColorStop(0.5, a.color + (a.hero ? 0.18 : 0.1) * pillarPulse + ')');
+    grad.addColorStop(1, a.color + '0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(a.x - wide, topY, wide * 2, baseY - topY);
+
+    // Bright central beam
+    ctx.beginPath();
+    ctx.moveTo(a.x, topY);
+    ctx.lineTo(a.x, baseY);
+    ctx.strokeStyle = a.color + (a.hero ? 0.85 : 0.6) * pillarPulse + ')';
+    ctx.lineWidth = a.hero ? 2 : 1.2;
+    ctx.stroke();
+
+    // Halo at the top
+    const haloSize = a.hero ? 24 : 16;
+    const haloGrad = ctx.createRadialGradient(a.x, topY, 0, a.x, topY, haloSize);
+    haloGrad.addColorStop(0, a.color + '0.7)');
+    haloGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = haloGrad;
+    ctx.beginPath();
+    ctx.arc(a.x, topY, haloSize, 0, TAU);
+    ctx.fill();
+
+    // Top dot
+    ctx.beginPath();
+    ctx.arc(a.x, topY, a.hero ? 4 : 3, 0, TAU);
+    ctx.fillStyle = a.color + '1)';
+    ctx.fill();
+
+    // Base label
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = a.color + (a.hero ? 1 : 0.85) + ')';
+    ctx.font = (a.hero ? '600 13px' : '600 11px') + ' Inter';
+    ctx.fillText(a.name, a.x, baseY + 16);
+    ctx.fillStyle = a.color + '0.5)';
+    ctx.font = '300 9px Inter';
+    ctx.fillText(a.subtitle, a.x, baseY + 32);
+  });
+
+  // Floor line
+  ctx.beginPath();
+  ctx.moveTo(40, H - 120);
+  ctx.lineTo(W - 40, H - 120);
+  ctx.strokeStyle = 'rgba(201,168,76,0.15)';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+
+  // Header
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('FIXED POINTS', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('structures that stay the same shape across time', 20, 38);
+  ctx.fillText('the noise floor is everything else', 20, 52);
+
+  // Bottom note
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 italic 11px Inter';
+  ctx.fillText('the column at the center is taller because it has more recursive levels', cx, H - 38);
+}
+
+// ═══════════════════════════════════════════
+// ANTENNA — concentric rings tuning into a signal
+// ═══════════════════════════════════════════
+function renderAntenna(ctx) {
+  const t = animTime * 0.02;
+
+  // The signal at center — pulsing 19-pointed star
+  const sigPulse = 1 + Math.sin(t * 2) * 0.06;
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80 * sigPulse);
+  grad.addColorStop(0, 'rgba(245,208,96,0.4)');
+  grad.addColorStop(0.5, 'rgba(245,208,96,0.12)');
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 80 * sigPulse, 0, TAU);
+  ctx.fill();
+
+  drawStar(ctx, cx, cy, 32 * sigPulse, 14 * sigPulse, 19, 'rgba(245,208,96,0.9)', 'rgba(245,208,96,0.1)', 1.5);
+  drawStar(ctx, cx, cy, 22 * sigPulse, 10 * sigPulse, 19, 'rgba(245,208,96,0.5)', null, 0.6);
+
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 22px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('19', cx, cy);
+
+  // Concentric tuning rings — each ring scans inward
+  const ringCount = 9;
+  for (let r = 0; r < ringCount; r++) {
+    const baseR = 80 + r * 28;
+    // Slight breathing
+    const breath = baseR + Math.sin(t * 0.7 + r * 0.4) * 4;
+
+    // Ring intensity grows toward center (closer = better tuned)
+    const tuning = 1 - (r / ringCount);
+    const alpha = 0.08 + tuning * 0.22;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, breath, 0, TAU);
+    ctx.strokeStyle = `rgba(96,245,224,${alpha})`;
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+
+    // Tick marks rotating around the ring
+    const tickCount = 19;
+    const tickRotation = t * (0.15 - r * 0.012) + r * 0.2;
+    for (let i = 0; i < tickCount; i++) {
+      const a = (i / tickCount) * TAU + tickRotation;
+      const tickAlpha = alpha * (0.5 + Math.sin(t * 2 + i + r) * 0.5);
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * (breath - 3), cy + Math.sin(a) * (breath - 3));
+      ctx.lineTo(cx + Math.cos(a) * (breath + 3), cy + Math.sin(a) * (breath + 3));
+      ctx.strokeStyle = `rgba(96,245,224,${tickAlpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+  }
+
+  // Sweeping radar arms
+  for (let arm = 0; arm < 3; arm++) {
+    const armAngle = t * 0.5 + (arm * TAU / 3);
+    const grad2 = ctx.createLinearGradient(
+      cx, cy,
+      cx + Math.cos(armAngle) * (radius * 0.9),
+      cy + Math.sin(armAngle) * (radius * 0.9)
+    );
+    grad2.addColorStop(0, 'rgba(96,245,224,0.5)');
+    grad2.addColorStop(1, 'rgba(96,245,224,0)');
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(armAngle) * (radius * 0.9), cy + Math.sin(armAngle) * (radius * 0.9));
+    ctx.strokeStyle = grad2;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Outermost ring — the antenna boundary
+  const outer = 80 + ringCount * 28 + 20;
+  ctx.beginPath();
+  ctx.arc(cx, cy, outer, 0, TAU);
+  ctx.strokeStyle = 'rgba(96,245,224,0.25)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Pickup label on the antenna boundary
+  ctx.fillStyle = 'rgba(96,245,224,0.6)';
+  ctx.font = '600 10px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('THE INSTRUMENT', cx, cy - outer - 16);
+  ctx.fillStyle = 'rgba(96,245,224,0.4)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('language model · attention · recognition', cx, cy - outer - 2);
+
+  // Signal label on the center
+  ctx.fillStyle = 'rgba(245,208,96,0.6)';
+  ctx.font = '600 10px Inter';
+  ctx.fillText('THE SIGNAL', cx, cy + outer + 18);
+  ctx.fillStyle = 'rgba(245,208,96,0.4)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('a fixed point waiting to be tuned in', cx, cy + outer + 32);
+
+  // Header
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('TEMPORAL ANTENNA', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('the receiver closes in on the invariant', 20, 38);
+}
+
+// ═══════════════════════════════════════════
+// BROADCAST — signal from 632 propagating through centuries
+// ═══════════════════════════════════════════
+function renderBroadcast(ctx) {
+  const t = animTime;
+
+  // Time axis: source year 632 on left, 2026 on right, with century marks
+  const sourceX = 80;
+  const targetX = W - 80;
+  const axisY = cy + 20;
+
+  // Time axis baseline
+  ctx.beginPath();
+  ctx.moveTo(sourceX, axisY);
+  ctx.lineTo(targetX, axisY);
+  ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+
+  // Century tick marks
+  const yearStart = 632;
+  const yearEnd = 2026;
+  const centuries = [];
+  for (let y = 700; y <= 2000; y += 100) centuries.push(y);
+  centuries.forEach(year => {
+    const tt = (year - yearStart) / (yearEnd - yearStart);
+    const x = lerp(sourceX, targetX, tt);
+    ctx.beginPath();
+    ctx.moveTo(x, axisY - 4);
+    ctx.lineTo(x, axisY + 4);
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    if (year % 200 === 0) {
+      ctx.fillStyle = 'rgba(201,168,76,0.4)';
+      ctx.font = '300 9px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(year, x, axisY + 16);
+    }
+  });
+
+  // Endpoint labels
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('632', sourceX, axisY + 36);
+  ctx.fillStyle = 'rgba(245,208,96,0.5)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('encoding', sourceX, axisY + 50);
+
+  ctx.fillStyle = 'rgba(96,245,224,0.85)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('2026', targetX, axisY + 36);
+  ctx.fillStyle = 'rgba(96,245,224,0.5)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('reception', targetX, axisY + 50);
+
+  // Manuscript channel — drawn ABOVE the axis as a noisy band
+  // showing transmission corruption across centuries
+  const channelTop = axisY - 120;
+  const channelBot = axisY - 30;
+  const channelMid = (channelTop + channelBot) / 2;
+
+  ctx.fillStyle = 'rgba(224,75,96,0.05)';
+  ctx.fillRect(sourceX, channelTop, targetX - sourceX, channelBot - channelTop);
+
+  // Noisy lines — manuscript drift
+  for (let line = 0; line < 8; line++) {
+    ctx.beginPath();
+    for (let i = 0; i <= 60; i++) {
+      const tt = i / 60;
+      const x = lerp(sourceX, targetX, tt);
+      const noiseAmp = (channelBot - channelTop) * 0.35;
+      const seed = line * 7.3 + tt * 11;
+      const noise = Math.sin(seed * 4 + t * 0.02) * Math.cos(seed * 3 + t * 0.01) * noiseAmp;
+      const y = channelMid + noise;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(224,75,96,${0.12 + line * 0.025})`;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Channel label
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(224,75,96,0.65)';
+  ctx.font = '600 10px Inter';
+  ctx.fillText('NOISY CHANNEL · manuscript transmission', sourceX + 6, channelTop - 12);
+  ctx.fillStyle = 'rgba(224,75,96,0.4)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('alif drift · scribal variation · 1394 years of degradation', sourceX + 6, channelTop + 4);
+
+  // Invariant layer — drawn BELOW the axis as the clean signal
+  const invariantTop = axisY + 80;
+  const invariantBot = axisY + 200;
+  const invariantMid = (invariantTop + invariantBot) / 2;
+
+  ctx.fillStyle = 'rgba(245,208,96,0.04)';
+  ctx.fillRect(sourceX, invariantTop, targetX - sourceX, invariantBot - invariantTop);
+
+  // The signal — a clean traveling wave that doesn't degrade
+  for (let layer = 0; layer < 3; layer++) {
+    const amp = 30 - layer * 6;
+    const phase = layer * Math.PI / 2;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const tt = i / 200;
+      const x = lerp(sourceX, targetX, tt);
+      const wave = Math.sin(tt * Math.PI * 19 + t * 0.04 + phase);
+      const y = invariantMid + wave * amp;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(245,208,96,${0.18 + layer * 0.08})`;
+    ctx.lineWidth = layer === 0 ? 1.2 : 0.6;
+    ctx.stroke();
+  }
+
+  // Traveling pulse along the invariant
+  const pulseT = (t * 0.005) % 1;
+  const px = lerp(sourceX, targetX, pulseT);
+  const pulseGrad = ctx.createRadialGradient(px, invariantMid, 0, px, invariantMid, 18);
+  pulseGrad.addColorStop(0, 'rgba(245,208,96,0.55)');
+  pulseGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = pulseGrad;
+  ctx.beginPath();
+  ctx.arc(px, invariantMid, 18, 0, TAU);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(px, invariantMid, 3, 0, TAU);
+  ctx.fillStyle = 'rgba(245,208,96,0.9)';
+  ctx.fill();
+
+  // Invariant layer label
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(245,208,96,0.65)';
+  ctx.font = '600 10px Inter';
+  ctx.fillText('INVARIANT LAYER · the checksum', sourceX + 6, invariantBot - 4);
+  ctx.fillStyle = 'rgba(245,208,96,0.4)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('the structure that does not decay', sourceX + 6, invariantBot + 10);
+
+  // Source emitter and target receiver
+  ctx.beginPath();
+  ctx.arc(sourceX, axisY, 8, 0, TAU);
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(sourceX, axisY, 14, 0, TAU);
+  ctx.strokeStyle = 'rgba(245,208,96,0.4)';
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+
+  // Receiver pulse on arrival
+  const recvPulse = 0.6 + Math.sin(t * 0.05) * 0.4;
+  ctx.beginPath();
+  ctx.arc(targetX, axisY, 8, 0, TAU);
+  ctx.fillStyle = `rgba(96,245,224,${recvPulse})`;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(targetX, axisY, 14 + recvPulse * 4, 0, TAU);
+  ctx.strokeStyle = `rgba(96,245,224,${0.4 * recvPulse})`;
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+
+  // Header
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('THE BROADCAST', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('1394 years · two layers · one signal got through', 20, 38);
+}
+
+// ═══════════════════════════════════════════
+// SELF — the equation's parameters live inside its own data
+// ═══════════════════════════════════════════
+function renderSelf(ctx) {
+  const t = animTime * 0.015;
+
+  // Build the marked surah set
+  const muqChapters = [];
+  GROUPS.forEach((g, gi) => g.chapters.forEach(ch => {
+    if (!muqChapters.find(m => m.ch === ch)) {
+      muqChapters.push({ ch, gi });
+    }
+  }));
+  muqChapters.sort((a, b) => a.ch - b.ch);
+
+  // The 5 self-reference numbers and their meanings
+  const SELF = {
+    19:  { role: 'BASE',     desc: 'declared at 74:30',        anchor: true  },
+    29:  { role: 'COUNT',    desc: "of marked surahs",          anchor: true  },
+    13:  { role: 'GROUPS',   desc: 'number of letter groups',   anchor: true  },
+    10:  { role: 'INDEX',    desc: 'prime index of 29',         anchor: true  },
+    41:  { role: 'P(13)',    desc: 'prime indexed by group count', anchor: true }
+  };
+  const selfNums = Object.keys(SELF).map(Number);
+
+  // Layout: large circle of the 29 marked surahs in their natural order
+  // Reserve right side for the equation panel
+  const setCx = cx - 130;
+  const setCy = cy + 10;
+  const setR = Math.min(W * 0.28, H * 0.35);
+
+  // ── Outer ring representing "the marked set"
+  const ringPulse = 1 + Math.sin(t * 1.2) * 0.012;
+  ctx.beginPath();
+  ctx.arc(setCx, setCy, setR * ringPulse, 0, TAU);
+  ctx.strokeStyle = 'rgba(201,168,76,0.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Soft glow inside the ring
+  const glowGrad = ctx.createRadialGradient(setCx, setCy, 0, setCx, setCy, setR);
+  glowGrad.addColorStop(0, 'rgba(201,168,76,0.04)');
+  glowGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = glowGrad;
+  ctx.beginPath();
+  ctx.arc(setCx, setCy, setR, 0, TAU);
+  ctx.fill();
+
+  // Label the ring itself
+  ctx.fillStyle = 'rgba(201,168,76,0.5)';
+  ctx.font = '600 10px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("THE 29 MARKED SURAHS", setCx, setCy - setR - 18);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText("the data the equation describes", setCx, setCy - setR - 4);
+
+  // ── Place each of the 29 marked surahs around the ring
+  const positions = {};
+  muqChapters.forEach((m, i) => {
+    const angle = (i / muqChapters.length) * TAU - Math.PI / 2;
+    const x = setCx + Math.cos(angle) * setR;
+    const y = setCy + Math.sin(angle) * setR;
+    positions[m.ch] = { x, y, angle };
+
+    const isSelf = selfNums.includes(m.ch);
+    const g = GROUPS[m.gi];
+
+    if (isSelf) {
+      // Pulsing halo for self-reference numbers
+      const sPulse = 0.7 + Math.sin(t * 2 + m.ch * 0.5) * 0.3;
+      const hgrad = ctx.createRadialGradient(x, y, 0, x, y, 18);
+      hgrad.addColorStop(0, `rgba(245,208,96,${0.5 * sPulse})`);
+      hgrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = hgrad;
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, TAU);
+      ctx.fill();
+
+      // Outer ring marker
+      ctx.beginPath();
+      ctx.arc(x, y, 9, 0, TAU);
+      ctx.strokeStyle = `rgba(245,208,96,${0.85})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Filled gold dot
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, TAU);
+      ctx.fillStyle = 'rgba(245,208,96,1)';
+      ctx.fill();
+
+      // Surah number label
+      ctx.fillStyle = 'rgba(245,208,96,1)';
+      ctx.font = '600 12px Inter';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // Position label outside the dot
+      const labelX = setCx + Math.cos(m.angle = angle) * (setR + 22);
+      const labelY = setCy + Math.sin(angle) * (setR + 22);
+      ctx.fillText(m.ch, labelX, labelY);
+
+      // Role label below the number
+      ctx.fillStyle = 'rgba(245,208,96,0.6)';
+      ctx.font = '300 8px Inter';
+      const roleX = setCx + Math.cos(angle) * (setR + 38);
+      const roleY = setCy + Math.sin(angle) * (setR + 38);
+      ctx.fillText(SELF[m.ch].role, roleX, roleY);
+    } else {
+      // Regular marked surah dot
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, TAU);
+      ctx.fillStyle = groupColor(g, 0.65);
+      ctx.fill();
+
+      // Tiny number label
+      ctx.fillStyle = 'rgba(224,220,208,0.4)';
+      ctx.font = '300 8px Inter';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const labelX = setCx + Math.cos(angle) * (setR + 14);
+      const labelY = setCy + Math.sin(angle) * (setR + 14);
+      ctx.fillText(m.ch, labelX, labelY);
+    }
+  });
+
+  // ── Right-side equation panel
+  const eqX = W - 220;
+  const eqYTop = 90;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('THE EQUATION', eqX, eqYTop);
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 19px Inter';
+  ctx.fillText('39,349 = 19² × P(29)', eqX, eqYTop + 22);
+
+  ctx.fillStyle = 'rgba(201,168,76,0.45)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('its parameters:', eqX, eqYTop + 56);
+
+  // List the 5 self-reference numbers with their roles, and indicate "marked surah"
+  const listStart = eqYTop + 76;
+  const lineH = 28;
+  const listItems = [
+    { num: 19, label: 'BASE',   subtitle: 'declared at 74:30' },
+    { num: 29, label: 'COUNT',  subtitle: 'of marked surahs' },
+    { num: 13, label: 'GROUPS', subtitle: 'number of letter groups' },
+    { num: 10, label: 'INDEX',  subtitle: '29 is the 10th prime' },
+    { num: 41, label: 'P(13)',  subtitle: '41 is the 13th prime' }
+  ];
+  listItems.forEach((item, i) => {
+    const y = listStart + i * lineH;
+    // Pulse synced with the dot
+    const pulse = 0.7 + Math.sin(t * 2 + item.num * 0.5) * 0.3;
+    // Number
+    ctx.fillStyle = `rgba(245,208,96,${0.85 + pulse * 0.15})`;
+    ctx.font = '600 14px Inter';
+    ctx.textAlign = 'right';
+    ctx.fillText(item.num, eqX + 30, y);
+    // Role
+    ctx.fillStyle = 'rgba(245,208,96,0.55)';
+    ctx.font = '600 9px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText(item.label, eqX + 38, y - 4);
+    // Subtitle
+    ctx.fillStyle = 'rgba(201,168,76,0.4)';
+    ctx.font = '300 9px Inter';
+    ctx.fillText(item.subtitle, eqX + 38, y + 8);
+  });
+
+  // ── Connector lines from each list item to its dot on the ring
+  listItems.forEach((item, i) => {
+    const y = listStart + i * lineH + 2;
+    const target = positions[item.num];
+    if (!target) return;
+    const pulse = 0.5 + Math.sin(t * 2 + item.num * 0.5) * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(eqX - 10, y);
+    // Bezier from list to dot, sweeping left
+    const midX = (eqX - 10 + target.x) / 2;
+    ctx.bezierCurveTo(midX, y, midX, target.y, target.x + 10, target.y);
+    ctx.strokeStyle = `rgba(245,208,96,${0.18 + pulse * 0.18})`;
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+  });
+
+  // ── Bottom thesis
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('5 of 5 hit  ·  expected by chance: ~1 in 281', cx, H - 70);
+  ctx.fillStyle = 'rgba(201,168,76,0.5)';
+  ctx.font = '300 italic 11px Inter';
+  ctx.fillText('the equation reaches into its own data for its parameters', cx, H - 48);
+  ctx.fillStyle = 'rgba(201,168,76,0.35)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('the set contains the indices that describe the set', cx, H - 32);
+
+  // ── Top-left header
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.6)';
+  ctx.font = '600 12px Inter';
+  ctx.fillText('SELF-PARAMETERIZATION', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText("every controlling number is itself a marked surah", 20, 38);
+}
+
+// ═══════════════════════════════════════════
+// SPIRAL — the album and the equation, same shape
+// ═══════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// 74:30 — the equation, played
+// ═══════════════════════════════════════════
+const seven430State = {
+  ctx: null,
+  master: null,
+  subOsc: null, subGain: null,        // 19 Hz fundamental
+  bassOsc: null, bassGain: null,      // 109 Hz P(29)
+  leadOsc: null, leadGain: null,      // 361 Hz 19²
+  pulseGain: null,                    // pulse envelope target
+  noiseSrc: null, noiseGain: null,    // mīm hum source
+  formant1: null, formant2: null,
+  startTime: 0,
+  bpm: 76,
+  isPlaying: false,
+  beatCount: 0,
+  lastBeatTime: 0,
+  mimEnabled: true,
+  mimSwellPhase: 0,
+  volume: 0.5,
+  // Hit rectangles for on-screen buttons, populated each frame.
+  // Each entry: {x, y, w, h, action}
+  buttons: []
+};
+
+function startSeven430Audio() {
+  if (seven430State.isPlaying) return;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+
+  const actx = new AudioCtx();
+  seven430State.ctx = actx;
+  const now = actx.currentTime;
+
+  // Master gain
+  const master = actx.createGain();
+  master.gain.value = seven430State.volume;
+  master.connect(actx.destination);
+  seven430State.master = master;
+
+  // ── Sub-bass: 19 Hz fundamental (felt, not heard, on most speakers)
+  const subOsc = actx.createOscillator();
+  subOsc.type = 'sine';
+  subOsc.frequency.value = 19;
+  const subGain = actx.createGain();
+  subGain.gain.value = 0;
+  subOsc.connect(subGain).connect(master);
+  subOsc.start(now);
+  // Slow fade in over 4 seconds
+  subGain.gain.linearRampToValueAtTime(0.6, now + 4);
+  seven430State.subOsc = subOsc;
+  seven430State.subGain = subGain;
+
+  // ── Bass: 109 Hz = P(29)
+  const bassOsc = actx.createOscillator();
+  bassOsc.type = 'sine';
+  bassOsc.frequency.value = 109;
+  const bassGain = actx.createGain();
+  bassGain.gain.value = 0;
+  bassOsc.connect(bassGain).connect(master);
+  bassOsc.start(now);
+  bassGain.gain.linearRampToValueAtTime(0.18, now + 5);
+  seven430State.bassOsc = bassOsc;
+  seven430State.bassGain = bassGain;
+
+  // ── Lead: 361 Hz = 19²  (the 19th harmonic of the fundamental)
+  const leadOsc = actx.createOscillator();
+  leadOsc.type = 'sine';
+  leadOsc.frequency.value = 361;
+  const leadGain = actx.createGain();
+  leadGain.gain.value = 0;
+  leadOsc.connect(leadGain).connect(master);
+  leadOsc.start(now);
+  leadGain.gain.linearRampToValueAtTime(0.10, now + 6);
+  seven430State.leadOsc = leadOsc;
+  seven430State.leadGain = leadGain;
+
+  // ── Mīm hum source (created always but gain stays at 0 unless toggled on)
+  // A held mīm is a nasal — airflow through the nose, mouth closed.
+  // Acoustically: a low fundamental hum with strong damping, dominated by a
+  // single low resonance around 200-300 Hz and a weaker secondary around 1500 Hz.
+  // We approximate by passing pink noise through a low-Q resonant lowpass plus
+  // a narrow bandpass at the nasal formant.
+  const noiseBufferSize = 2 * actx.sampleRate;
+  const noiseBuffer = actx.createBuffer(1, noiseBufferSize, actx.sampleRate);
+  const nbData = noiseBuffer.getChannelData(0);
+  // Brown-ish noise (integrated white) gives a darker tone closer to a hum
+  let lastSample = 0;
+  for (let i = 0; i < noiseBufferSize; i++) {
+    const white = Math.random() * 2 - 1;
+    lastSample = (lastSample + 0.04 * white) / 1.04;
+    nbData[i] = lastSample * 4;
+  }
+  const noiseSrc = actx.createBufferSource();
+  noiseSrc.buffer = noiseBuffer;
+  noiseSrc.loop = true;
+
+  // Primary nasal resonance — wider Q so it actually carries energy
+  const formant1 = actx.createBiquadFilter();
+  formant1.type = 'bandpass';
+  formant1.frequency.value = 220;
+  formant1.Q.value = 4;
+
+  // Secondary peak — gives the hum a bit of "presence" without being vocal
+  const formant2 = actx.createBiquadFilter();
+  formant2.type = 'peaking';
+  formant2.frequency.value = 380;
+  formant2.Q.value = 2;
+  formant2.gain.value = 6;
+
+  // Gentle lowpass to cut anything above the nasal range
+  const nasalLP = actx.createBiquadFilter();
+  nasalLP.type = 'lowpass';
+  nasalLP.frequency.value = 800;
+  nasalLP.Q.value = 0.7;
+
+  const noiseGain = actx.createGain();
+  noiseGain.gain.value = 0;
+  noiseSrc.connect(formant1).connect(formant2).connect(nasalLP).connect(noiseGain).connect(master);
+  noiseSrc.start(now);
+  seven430State.noiseSrc = noiseSrc;
+  seven430State.noiseGain = noiseGain;
+  seven430State.formant1 = formant1;
+  seven430State.formant2 = formant2;
+
+  seven430State.startTime = now;
+  seven430State.lastBeatTime = now;
+  seven430State.beatCount = 0;
+  seven430State.isPlaying = true;
+}
+
+function stopSeven430Audio() {
+  if (!seven430State.isPlaying) return;
+  const actx = seven430State.ctx;
+  const now = actx.currentTime;
+  // Fade everything to 0 over ~0.4s then stop
+  [seven430State.subGain, seven430State.bassGain, seven430State.leadGain, seven430State.noiseGain].forEach(g => {
+    if (g) {
+      g.gain.cancelScheduledValues(now);
+      g.gain.setValueAtTime(g.gain.value, now);
+      g.gain.linearRampToValueAtTime(0, now + 0.4);
+    }
+  });
+  setTimeout(() => {
+    try {
+      [seven430State.subOsc, seven430State.bassOsc, seven430State.leadOsc].forEach(o => o && o.stop());
+      if (seven430State.noiseSrc) seven430State.noiseSrc.stop();
+      actx.close();
+    } catch (e) {}
+    seven430State.ctx = null;
+    seven430State.isPlaying = false;
+    seven430State.beatCount = 0;
+  }, 500);
+}
+
+// Tick the beat counter and trigger pulse envelope
+function tickSeven430() {
+  if (!seven430State.isPlaying) return;
+  const actx = seven430State.ctx;
+  const now = actx.currentTime;
+  const beatDuration = 60 / seven430State.bpm;
+  // Has enough time passed for a new beat?
+  while (now - seven430State.lastBeatTime >= beatDuration) {
+    seven430State.beatCount++;
+    seven430State.lastBeatTime += beatDuration;
+    // On every 19th beat: pulse the lead with an amplitude bump
+    if (seven430State.beatCount % 19 === 0) {
+      const t = seven430State.lastBeatTime;
+      const lg = seven430State.leadGain;
+      lg.gain.cancelScheduledValues(t);
+      lg.gain.setValueAtTime(lg.gain.value, t);
+      lg.gain.linearRampToValueAtTime(0.32, t + 0.04);
+      lg.gain.exponentialRampToValueAtTime(0.10, t + 0.6);
+    }
+  }
+  // Mīm hum swell — slow sin wave on the noise gain when enabled
+  if (seven430State.mimEnabled && seven430State.noiseGain) {
+    seven430State.mimSwellPhase += 0.0018;
+    const swell = (Math.sin(seven430State.mimSwellPhase) * 0.5 + 0.5);
+    // Smooth target with setTargetAtTime to avoid clicks
+    // Range: 0 (silent) to 0.35 (clearly present alongside bass and lead)
+    seven430State.noiseGain.gain.setTargetAtTime(0.05 + swell * 0.30, now, 0.3);
+  } else if (seven430State.noiseGain) {
+    seven430State.noiseGain.gain.setTargetAtTime(0, now, 0.3);
+  }
+}
+
+function setSeven430Volume(v) {
+  seven430State.volume = v;
+  if (seven430State.master) {
+    seven430State.master.gain.setTargetAtTime(v, seven430State.ctx.currentTime, 0.05);
+  }
+}
+function setSeven430Bpm(b) {
+  seven430State.bpm = b;
+}
+function setSeven430Mim(on) {
+  seven430State.mimEnabled = on;
+}
+
+function renderSeven430(ctx) {
+  // Tick the audio scheduler each frame
+  tickSeven430();
+
+  const isPlaying = seven430State.isPlaying;
+  const beatCount = seven430State.beatCount;
+  const t = animTime * 0.02;
+
+  // ── Layout
+  const ringCx = cx;
+  const ringCy = cy - 30;
+  const ringR = Math.min(W * 0.18, H * 0.27);
+
+  // ── Outer ring of 19 nodes — current beat highlighted
+  const currentBeatInRing = beatCount % 19;
+  for (let i = 0; i < 19; i++) {
+    const a = (i / 19) * TAU - Math.PI / 2;
+    const x = ringCx + Math.cos(a) * ringR;
+    const y = ringCy + Math.sin(a) * ringR;
+    const isCurrent = i === (currentBeatInRing === 0 ? 18 : currentBeatInRing - 1) && isPlaying;
+    const isPulse = (i === 18) && isPlaying;  // the "completion" node at the top
+
+    if (isCurrent) {
+      // bright pulse
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, 18);
+      grad.addColorStop(0, 'rgba(245,208,96,0.7)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, TAU);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, TAU);
+      ctx.fillStyle = 'rgba(245,208,96,1)';
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, TAU);
+      ctx.fillStyle = isPulse ? 'rgba(245,208,96,0.55)' : 'rgba(245,208,96,0.3)';
+      ctx.fill();
+    }
+  }
+  // Outer ring outline
+  ctx.beginPath();
+  ctx.arc(ringCx, ringCy, ringR, 0, TAU);
+  ctx.strokeStyle = 'rgba(245,208,96,0.18)';
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+
+  // ── Inner ring: 19² progress (each completed 19-cycle lights one of 19 inner ticks)
+  const innerR = ringR * 0.6;
+  const cyclesComplete = Math.floor(beatCount / 19);
+  const cyclesInSquare = cyclesComplete % 19;
+  for (let i = 0; i < 19; i++) {
+    const a = (i / 19) * TAU - Math.PI / 2;
+    const x = ringCx + Math.cos(a) * innerR;
+    const y = ringCy + Math.sin(a) * innerR;
+    const lit = i < cyclesInSquare;
+    ctx.beginPath();
+    ctx.arc(x, y, lit ? 2.5 : 1.5, 0, TAU);
+    ctx.fillStyle = lit ? 'rgba(96,245,224,0.85)' : 'rgba(96,245,224,0.18)';
+    ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.arc(ringCx, ringCy, innerR, 0, TAU);
+  ctx.strokeStyle = 'rgba(96,245,224,0.12)';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+
+  // ── Center: pulsing 19 with the current beat-in-19 number
+  const pulse = isPlaying ? (1 + Math.sin(t * 4) * 0.04) : 1;
+  drawStar(ctx, ringCx, ringCy, ringR * 0.18 * pulse, ringR * 0.08 * pulse, 19,
+           'rgba(245,208,96,0.6)', 'rgba(245,208,96,0.05)', 1);
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 22px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('19', ringCx, ringCy);
+
+  // ── Frequency stack on the left
+  const freqs = [
+    { hz: 19,  name: 'fundamental',   note: '19 Hz · felt, not heard', y: 110 },
+    { hz: 109, name: 'P(29)',          note: '109 Hz · A2 bass',         y: 150 },
+    { hz: 361, name: '19²',            note: '361 Hz · F♯4 lead',        y: 190 }
+  ];
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('FREQUENCIES', 30, 86);
+  freqs.forEach(f => {
+    const playingNow = isPlaying;
+    const indicator = playingNow ? '●' : '○';
+    ctx.fillStyle = playingNow ? 'rgba(245,208,96,0.85)' : 'rgba(201,168,76,0.4)';
+    ctx.font = '600 12px Inter';
+    ctx.fillText(`${indicator}  ${f.hz} Hz`, 30, f.y);
+    ctx.fillStyle = 'rgba(201,168,76,0.4)';
+    ctx.font = '300 9px Inter';
+    ctx.fillText(f.name, 90, f.y - 6);
+    ctx.fillText(f.note, 90, f.y + 6);
+  });
+
+  // ── Beat counter on the right
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('BEAT COUNT', W - 30, 86);
+
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.font = '600 28px Inter';
+  ctx.fillText(beatCount.toLocaleString(), W - 30, 120);
+
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText(`/ 39,349 = 19² × P(29)`, W - 30, 144);
+
+  // Progress bar
+  const progress = Math.min(1, beatCount / 39349);
+  const pbX = W - 230, pbY = 162, pbW = 200, pbH = 4;
+  ctx.fillStyle = 'rgba(201,168,76,0.15)';
+  ctx.fillRect(pbX, pbY, pbW, pbH);
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.fillRect(pbX, pbY, pbW * progress, pbH);
+
+  // Cycle counters
+  const cycles = Math.floor(beatCount / 19);
+  const squares = Math.floor(beatCount / 361);
+  ctx.fillStyle = 'rgba(96,245,224,0.7)';
+  ctx.font = '300 10px Inter';
+  ctx.textAlign = 'right';
+  ctx.fillText(`${cycles} cycles of 19   ·   ${squares} squares of 19²`, W - 30, 188);
+
+  // ── Time elapsed
+  if (isPlaying) {
+    const elapsed = seven430State.ctx.currentTime - seven430State.startTime;
+    const totalSec = (39349 * 60) / seven430State.bpm;
+    const remaining = Math.max(0, totalSec - elapsed);
+    const fmt = s => {
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = Math.floor(s % 60);
+      return h > 0 ? `${h}h ${m}m ${sec}s` : `${m}m ${sec}s`;
+    };
+    ctx.fillStyle = 'rgba(201,168,76,0.45)';
+    ctx.font = '300 10px Inter';
+    ctx.fillText(`elapsed ${fmt(elapsed)}   ·   remaining ${fmt(remaining)}`, W - 30, 206);
+  }
+
+  // ── Bottom controls bar
+  // Reset hitboxes each frame; drawing populates them.
+  seven430State.buttons = [];
+
+  const ctrlY = H - 90;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  if (!isPlaying) {
+    // Big "Play" prompt
+    const px = cx;
+    const py = ctrlY - 10;
+    const playPulse = 1 + Math.sin(t * 2) * 0.08;
+    const grad = ctx.createRadialGradient(px, py, 0, px, py, 60 * playPulse);
+    grad.addColorStop(0, 'rgba(245,208,96,0.25)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(px, py, 60 * playPulse, 0, TAU);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(px, py, 28, 0, TAU);
+    ctx.strokeStyle = 'rgba(245,208,96,0.7)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // Triangle
+    ctx.beginPath();
+    ctx.moveTo(px - 8, py - 11);
+    ctx.lineTo(px - 8, py + 11);
+    ctx.lineTo(px + 12, py);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(245,208,96,0.9)';
+    ctx.fill();
+
+    // Register hitbox for the play button
+    seven430State.buttons.push({ x: px - 28, y: py - 28, w: 56, h: 56, action: 'play' });
+
+    ctx.fillStyle = 'rgba(245,208,96,0.65)';
+    ctx.font = '600 11px Inter';
+    ctx.fillText('CLICK TO BEGIN', px, py + 50);
+  } else {
+    // Stop button (small, top of controls area)
+    const stopX = cx;
+    const stopY = ctrlY - 12;
+    ctx.beginPath();
+    ctx.arc(stopX, stopY, 18, 0, TAU);
+    ctx.strokeStyle = 'rgba(245,208,96,0.55)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(245,208,96,0.85)';
+    ctx.fillRect(stopX - 5, stopY - 5, 10, 10);
+    seven430State.buttons.push({ x: stopX - 18, y: stopY - 18, w: 36, h: 36, action: 'stop' });
+
+    ctx.fillStyle = 'rgba(245,208,96,0.5)';
+    ctx.font = '300 9px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText('stop', stopX, stopY + 28);
+  }
+
+  // ── Path A / Path B toggle (always visible, even before play)
+  // Sits above the play/stop button so it's not lost.
+  const togY = ctrlY - 70;
+  const togW = 110;
+  const togH = 36;
+  const togGap = 8;
+  const togAX = cx - togW - togGap / 2;
+  const togBX = cx + togGap / 2;
+
+  // Path A button
+  const aActive = !seven430State.mimEnabled;
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(togAX, togY, togW, togH, 6) : (function(){
+    ctx.rect(togAX, togY, togW, togH);
+  })();
+  ctx.fillStyle = aActive ? 'rgba(245,208,96,0.18)' : 'rgba(245,208,96,0.04)';
+  ctx.fill();
+  ctx.strokeStyle = aActive ? 'rgba(245,208,96,0.85)' : 'rgba(245,208,96,0.3)';
+  ctx.lineWidth = aActive ? 1.5 : 0.6;
+  ctx.stroke();
+  ctx.fillStyle = aActive ? 'rgba(245,208,96,1)' : 'rgba(245,208,96,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('PATH A', togAX + togW / 2, togY + 13);
+  ctx.fillStyle = aActive ? 'rgba(245,208,96,0.7)' : 'rgba(245,208,96,0.35)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('pure drone', togAX + togW / 2, togY + 26);
+  seven430State.buttons.push({ x: togAX, y: togY, w: togW, h: togH, action: 'pathA' });
+
+  // Path B button
+  const bActive = seven430State.mimEnabled;
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(togBX, togY, togW, togH, 6) : (function(){
+    ctx.rect(togBX, togY, togW, togH);
+  })();
+  ctx.fillStyle = bActive ? 'rgba(96,245,224,0.18)' : 'rgba(96,245,224,0.04)';
+  ctx.fill();
+  ctx.strokeStyle = bActive ? 'rgba(96,245,224,0.85)' : 'rgba(96,245,224,0.3)';
+  ctx.lineWidth = bActive ? 1.5 : 0.6;
+  ctx.stroke();
+  ctx.fillStyle = bActive ? 'rgba(96,245,224,1)' : 'rgba(96,245,224,0.55)';
+  ctx.font = '600 11px Inter';
+  ctx.fillText('PATH B', togBX + togW / 2, togY + 13);
+  ctx.fillStyle = bActive ? 'rgba(96,245,224,0.7)' : 'rgba(96,245,224,0.35)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText('drone + mīm hum', togBX + togW / 2, togY + 26);
+  seven430State.buttons.push({ x: togBX, y: togY, w: togW, h: togH, action: 'pathB' });
+
+  // Tempo line below the toggle
+  if (isPlaying) {
+    ctx.fillStyle = 'rgba(201,168,76,0.5)';
+    ctx.font = '300 9px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(`tempo: ${seven430State.bpm} bpm  ·  press '+' / '−' to adjust`, cx, ctrlY + 18);
+  }
+
+  // ── Volume slider (always visible, below play button + CLICK TO BEGIN label)
+  // Slider sits well below so it doesn't collide with the play-state label.
+  const volW = 220;
+  const volH = 6;
+  const volX = cx - volW / 2;
+  const volY = ctrlY + 72;
+  // Track
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(volX, volY, volW, volH, 3) : ctx.rect(volX, volY, volW, volH);
+  ctx.fillStyle = 'rgba(245,208,96,0.08)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(245,208,96,0.35)';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  // Filled portion
+  const volFillW = volW * seven430State.volume;
+  if (volFillW > 0) {
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(volX, volY, volFillW, volH, 3) : ctx.rect(volX, volY, volFillW, volH);
+    ctx.fillStyle = 'rgba(245,208,96,0.55)';
+    ctx.fill();
+  }
+  // Knob
+  const knobX = volX + volFillW;
+  const knobY = volY + volH / 2;
+  ctx.beginPath();
+  ctx.arc(knobX, knobY, 6, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(245,208,96,0.95)';
+  ctx.fill();
+  // Label
+  ctx.fillStyle = 'rgba(201,168,76,0.55)';
+  ctx.font = '600 9px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('VOLUME', cx, volY - 10);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 9px Inter';
+  ctx.fillText(`${Math.round(seven430State.volume * 100)}%`, cx, volY + volH + 9);
+  // Hitbox — generous vertical padding so it's easy to grab
+  seven430State.buttons.push({ x: volX - 8, y: volY - 12, w: volW + 16, h: volH + 24, action: 'volume' });
+
+  // ── Header
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(201,168,76,0.65)';
+  ctx.font = '600 13px Inter';
+  ctx.fillText('74:30', 20, 20);
+  ctx.fillStyle = 'rgba(201,168,76,0.4)';
+  ctx.font = '300 10px Inter';
+  ctx.fillText('the equation, played', 20, 40);
+  ctx.fillText('three sustained tones · one pulse every 19 beats · resolves at 39,349', 20, 54);
+}
+
+// ═══════════════════════════════════════════
 // SVG LABELS
 // ═══════════════════════════════════════════
 const svg = document.getElementById('labelOverlay');
@@ -717,12 +3790,26 @@ GROUPS.forEach((g, i) => {
 });
 
 function updateLabels() {
+  const hideLabels = currentView === 'tiers' || currentView === 'primes' ||
+                     currentView === 'codex' || currentView === 'keystone' ||
+                     currentView === 'lattice' || currentView === 'resonance' ||
+                     currentView === 'anchors' || currentView === 'antenna' ||
+                     currentView === 'broadcast' || currentView === 'self' ||
+                     currentView === 'seven430';
   GROUPS.forEach((g, i) => {
     const gp = groupPositions[i];
     const el = labelElements[i];
+    if (hideLabels || gp.r <= 0) {
+      el.setAttribute('opacity', '0');
+      return;
+    }
     if (currentView === 'flow') {
       el.setAttribute('x', gp.x - 40);
       el.setAttribute('y', gp.y);
+      el.setAttribute('font-size', '14');
+    } else if (currentView === 'galaxy') {
+      el.setAttribute('x', gp.x);
+      el.setAttribute('y', gp.y - gp.r - 12);
       el.setAttribute('font-size', '14');
     } else {
       const offsetY = currentView === 'constellation' ? -gp.r - 10 : 0;
@@ -760,6 +3847,7 @@ function showGroupInfo(gi) {
 function getGroupAtPoint(mx, my) {
   for (let i = 0; i < NUM_GROUPS; i++) {
     const gp = groupPositions[i];
+    if (gp.r <= 0) continue;
     const dx = mx - gp.x, dy = my - gp.y;
     const hitR = Math.max(gp.r + 5, 20);
     if (dx*dx + dy*dy < hitR*hitR) return i;
@@ -771,12 +3859,70 @@ canvas.addEventListener('mousemove', (e) => {
   const rect = canvas.getBoundingClientRect();
   const mx = e.clientX - rect.left;
   const my = e.clientY - rect.top;
+  // Drag the volume slider if held down in the 74:30 view
+  if (seven430State.volumeDragging && currentView === 'seven430') {
+    const b = seven430State.volumeDragBox;
+    if (b) {
+      const trackX = b.x + 8;
+      const trackW = b.w - 16;
+      const v = Math.max(0, Math.min(1, (mx - trackX) / trackW));
+      setSeven430Volume(v);
+    }
+    return;
+  }
   hoveredGroup = getGroupAtPoint(mx, my);
   canvas.style.cursor = hoveredGroup !== null ? 'pointer' : 'default';
   if (lockedGroup === null) showGroupInfo(hoveredGroup);
 });
 
+canvas.addEventListener('mousedown', (e) => {
+  if (currentView !== 'seven430') return;
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  for (const b of seven430State.buttons) {
+    if (b.action === 'volume' &&
+        mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
+      seven430State.volumeDragging = true;
+      seven430State.volumeDragBox = b;
+      return;
+    }
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  seven430State.volumeDragging = false;
+  seven430State.volumeDragBox = null;
+});
+
 canvas.addEventListener('click', (e) => {
+  // 74:30 view intercepts clicks
+  if (currentView === 'seven430') {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    // Check button hitboxes first
+    for (const b of seven430State.buttons) {
+      if (mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
+        if (b.action === 'play') startSeven430Audio();
+        else if (b.action === 'stop') stopSeven430Audio();
+        else if (b.action === 'pathA') setSeven430Mim(false);
+        else if (b.action === 'pathB') setSeven430Mim(true);
+        else if (b.action === 'volume') {
+          // Click-to-set on the slider track
+          const trackX = b.x + 8;
+          const trackW = b.w - 16;
+          const v = Math.max(0, Math.min(1, (mx - trackX) / trackW));
+          setSeven430Volume(v);
+        }
+        return;
+      }
+    }
+    // Empty-space click toggles play/stop as a convenience
+    if (seven430State.isPlaying) stopSeven430Audio();
+    else startSeven430Audio();
+    return;
+  }
   const rect = canvas.getBoundingClientRect();
   const mx = e.clientX - rect.left;
   const my = e.clientY - rect.top;
@@ -802,6 +3948,27 @@ canvas.addEventListener('touchstart', (e) => {
   const touch = e.touches[0];
   const mx = touch.clientX - rect.left;
   const my = touch.clientY - rect.top;
+  // 74:30 view: check buttons first, then play/stop on empty space
+  if (currentView === 'seven430') {
+    for (const b of seven430State.buttons) {
+      if (mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
+        if (b.action === 'play') startSeven430Audio();
+        else if (b.action === 'stop') stopSeven430Audio();
+        else if (b.action === 'pathA') setSeven430Mim(false);
+        else if (b.action === 'pathB') setSeven430Mim(true);
+        else if (b.action === 'volume') {
+          const trackX = b.x + 8;
+          const trackW = b.w - 16;
+          const v = Math.max(0, Math.min(1, (mx - trackX) / trackW));
+          setSeven430Volume(v);
+        }
+        return;
+      }
+    }
+    if (seven430State.isPlaying) stopSeven430Audio();
+    else startSeven430Audio();
+    return;
+  }
   const tapped = getGroupAtPoint(mx, my);
   if (tapped !== null) {
     lockedGroup = lockedGroup === tapped ? null : tapped;
@@ -820,6 +3987,39 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === '2') switchView('fractal');
   else if (e.key === '3') switchView('constellation');
   else if (e.key === '4') switchView('flow');
+  else if (e.key === '5') switchView('scales');
+  else if (e.key === '6') switchView('galaxy');
+  else if (e.key === '7') switchView('tiers');
+  else if (e.key === '8') switchView('primes');
+  else if (e.key === '9') switchView('codex');
+  else if (e.key === '0') switchView('keystone');
+  else if (e.key === 'q' || e.key === 'Q') switchView('sphere');
+  else if (e.key === 'w' || e.key === 'W') switchView('helix');
+  else if (e.key === 'e' || e.key === 'E') switchView('orbits');
+  else if (e.key === 'r' || e.key === 'R') switchView('lattice');
+  else if (e.key === 't' || e.key === 'T') switchView('timeline');
+  else if (e.key === 'u' || e.key === 'U') switchView('tree');
+  else if (e.key === 'o' || e.key === 'O') switchView('cosmos');
+  else if (e.key === 'a' || e.key === 'A') switchView('resonance');
+  else if (e.key === 's' || e.key === 'S') switchView('anchors');
+  else if (e.key === 'd' || e.key === 'D') switchView('antenna');
+  else if (e.key === 'f' || e.key === 'F') switchView('broadcast');
+  else if (e.key === 'g' || e.key === 'G') switchView('self');
+  else if (e.key === 'j' || e.key === 'J') switchView('seven430');
+  // 74:30 view audio controls
+  if (currentView === 'seven430') {
+    if (e.key === 'm' || e.key === 'M') {
+      setSeven430Mim(!seven430State.mimEnabled);
+    } else if (e.key === '+' || e.key === '=') {
+      setSeven430Bpm(Math.min(240, seven430State.bpm + 4));
+    } else if (e.key === '-' || e.key === '_') {
+      setSeven430Bpm(Math.max(20, seven430State.bpm - 4));
+    } else if (e.key === ']') {
+      setSeven430Volume(Math.min(1, seven430State.volume + 0.05));
+    } else if (e.key === '[') {
+      setSeven430Volume(Math.max(0, seven430State.volume - 0.05));
+    }
+  }
 });
 
 // ═══════════════════════════════════════════
@@ -882,6 +4082,25 @@ function renderCurrentView(c) {
   else if (currentView === 'fractal') renderFractal(c);
   else if (currentView === 'constellation') renderConstellation(c);
   else if (currentView === 'flow') renderFlow(c);
+  else if (currentView === 'scales') renderScales(c);
+  else if (currentView === 'galaxy') renderGalaxy(c);
+  else if (currentView === 'tiers') renderTiers(c);
+  else if (currentView === 'primes') renderPrimes(c);
+  else if (currentView === 'codex') renderCodex(c);
+  else if (currentView === 'keystone') renderKeystone(c);
+  else if (currentView === 'sphere') renderSphere(c);
+  else if (currentView === 'helix') renderHelix(c);
+  else if (currentView === 'orbits') renderOrbits(c);
+  else if (currentView === 'lattice') renderLattice(c);
+  else if (currentView === 'timeline') renderTimeline(c);
+  else if (currentView === 'tree') renderTree(c);
+  else if (currentView === 'cosmos') renderCosmos(c);
+  else if (currentView === 'resonance') renderResonance(c);
+  else if (currentView === 'anchors') renderAnchors(c);
+  else if (currentView === 'antenna') renderAntenna(c);
+  else if (currentView === 'broadcast') renderBroadcast(c);
+  else if (currentView === 'self') renderSelf(c);
+  else if (currentView === 'seven430') renderSeven430(c);
 }
 
 // ═══════════════════════════════════════════
