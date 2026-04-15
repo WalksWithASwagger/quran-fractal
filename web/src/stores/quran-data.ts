@@ -39,7 +39,7 @@ export function useGroups(): LetterGroup[] {
 
 export function useGroup(id: number): LetterGroup | null {
   const groups = useGroups();
-  return groups[id] ?? null;
+  return groups.find((group) => group.id === id) ?? null;
 }
 
 export function useSurahs(): SurahInfo[] {

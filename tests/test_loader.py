@@ -22,6 +22,22 @@ def test_load_quran_file_rejects_non_pipe_delimited_text(tmp_path: Path) -> None
         load_quran_file(sample)
 
 
+def test_load_quran_file_rejects_non_utf8_input(tmp_path: Path) -> None:
+    sample = tmp_path / "latin1.txt"
+    sample.write_bytes("1|1|caf\xe9\n".encode("latin-1"))
+
+    with pytest.raises(ValueError, match="Unable to decode"):
+        load_quran_file(sample)
+
+
+def test_load_quran_file_rejects_malformed_pipe_line(tmp_path: Path) -> None:
+    sample = tmp_path / "bad-format.txt"
+    sample.write_text("1|1\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Malformed line"):
+        load_quran_file(sample)
+
+
 def test_resolve_source_paths_prefers_existing_repo_files() -> None:
     repo_root = Path(__file__).resolve().parents[1]
 

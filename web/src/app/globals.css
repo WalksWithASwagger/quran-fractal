@@ -17,6 +17,7 @@
   --color-teal: var(--teal);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-arabic: var(--font-amiri);
 }
 
 body {
@@ -26,8 +27,12 @@ body {
 
 /* Arabic text styling */
 .arabic {
-  font-family: 'Amiri', serif;
+  font-family: var(--font-arabic), serif;
   direction: rtl;
+}
+
+.font-arabic {
+  font-family: var(--font-arabic), serif;
 }
 
 /* Glow effects */
@@ -62,4 +67,137 @@ body {
 ::selection {
   background: rgba(201, 168, 76, 0.3);
   color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRINT STYLES
+   For academic papers, documentation, and physical output
+   ═══════════════════════════════════════════════════════════════ */
+
+@media print {
+  /* Reset background for printing */
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* Hide interactive elements */
+  button,
+  .controls,
+  [data-print-hide="true"] {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  [data-print-only="true"] {
+    display: block !important;
+  }
+
+  /* Canvas visualization - convert to grayscale-friendly */
+  canvas {
+    filter: contrast(1.2);
+    max-width: 100%;
+    height: auto !important;
+  }
+
+  /* Table styling for data display */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background: #f0f0f0 !important;
+    font-weight: bold;
+  }
+
+  /* Page breaks */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Links - show URLs */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Don't print URLs for internal links */
+  a[href^="#"]::after,
+  a[href^="/"]::after {
+    content: "";
+  }
+
+  /* Arabic text - ensure proper rendering */
+  .arabic,
+  .font-arabic {
+    font-family: 'Amiri', 'Traditional Arabic', serif;
+    font-size: 14pt;
+  }
+
+  /* Gold/teal colors to grayscale */
+  .text-amber-400,
+  .text-amber-300,
+  .glow-gold {
+    color: #000 !important;
+    text-shadow: none !important;
+  }
+
+  .text-cyan-400,
+  .text-cyan-300,
+  .glow-teal {
+    color: #333 !important;
+    text-shadow: none !important;
+  }
+
+  /* Info section - clean formatting */
+  section {
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Footer - minimal */
+  footer {
+    border-top: 1px solid #ccc !important;
+    background: white !important;
+    font-size: 10pt;
+  }
+
+  /* Remove backdrop effects */
+  .backdrop-blur-sm,
+  .backdrop-blur-xl {
+    backdrop-filter: none !important;
+  }
+}
+
+/* High contrast print version */
+@media print and (prefers-contrast: high) {
+  body {
+    font-weight: 500;
+  }
+
+  th {
+    background: #000 !important;
+    color: #fff !important;
+  }
 }

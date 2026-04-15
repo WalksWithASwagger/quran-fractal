@@ -20,12 +20,11 @@
  * - White: Purity, spiritual starting point
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { GROUPS, TOTAL, NUM_GROUPS, type LetterGroup } from '@/lib/groups';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import type { LetterGroup } from '@/lib/types';
+import { useGroups, useQuranDataStore } from '@/stores/quran-data';
 import { FlowField } from '@/lib/perlin';
 import { useAudioAnalyzer, audioToVisual, type AudioData } from '@/hooks/useAudioAnalyzer';
-import { AnimationController } from '@/lib/animationController';
-import { gradientCache } from '@/lib/gradientCache';
 
 type ViewMode = 'mandala' | 'fractal' | 'constellation' | 'flow';
 
@@ -64,18 +63,6 @@ const MAX_PARTICLES = 400; // Increased for richer atmosphere
 const GIRIH_36 = Math.PI / 5;  // 36 degrees
 const GIRIH_72 = Math.PI * 2 / 5;  // 72 degrees
 
-function getGroupColor(g: LetterGroup, alpha = 1): string {
-  if (g.tier === 1) {
-    // Gold tones for Tier 1 - Divine glory
-    const hue = 35 + (g.id / NUM_GROUPS) * 25;
-    return `hsla(${hue}, 85%, 58%, ${alpha})`;
-  } else {
-    // Teal/cyan tones for Tier 2 - Contemplation
-    const hue = 170 + (g.id / NUM_GROUPS) * 30;
-    return `hsla(${hue}, 75%, 55%, ${alpha})`;
-  }
-}
-
 interface FractalVisualizationProps {
   className?: string;
   initialView?: ViewMode;
@@ -111,21 +98,42 @@ export default function FractalVisualization({
   const [currentView, setCurrentView] = useState<ViewMode>(initialView);
   const [selectedGroup, setSelectedGroup] = useState<LetterGroup | null>(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
+  const groups = useGroups();
+  const loadData = useQuranDataStore((s) => s.load);
+  const dataError = useQuranDataStore((s) => s.error);
+  const total = useMemo(() => groups.reduce((sum, g) => sum + g.count, 0), [groups]);
+  const numGroups = groups.length;
 
   // Advanced animation and effects modules
   const flowFieldRef = useRef<FlowField>(new FlowField(0.003, 0.0003));
-  const animControllerRef = useRef<AnimationController | null>(null);
   const audioDataRef = useRef<AudioData | null>(null);
   const audioStateRef = useRef({ enabled: false, active: false });
 
   // Audio analyzer hook
   const {
     isActive: audioActive,
-    hasPermission: audioPermission,
+    error: audioError,
     start: startAudio,
     stop: stopAudio,
     getData: getAudioData,
   } = useAudioAnalyzer();
+
+  const getGroupColor = useCallback(
+    (group: LetterGroup, alpha = 1): string => {
+      const denominator = Math.max(1, numGroups);
+      if (group.tier === 1) {
+        const hue = 35 + (group.id / denominator) * 25;
+        return `hsla(${hue}, 85%, 58%, ${alpha})`;
+      }
+      const hue = 170 + (group.id / denominator) * 30;
+      return `hsla(${hue}, 75%, 55%, ${alpha})`;
+    },
+    [numGroups]
+  );
+
+  useEffect(() => {
+    void loadData();
+  }, [loadData]);
 
   // Sync audio state to ref for animation loop access
   useEffect(() => {
@@ -137,6 +145,40 @@ export default function FractalVisualization({
   useEffect(() => {
     getAudioDataRef.current = getAudioData;
   }, [getAudioData]);
+
+  // Export canvas to PNG
+  const exportToPNG = useCallback((filename = '7430-fractal') => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Create a high-resolution version (2x for retina)
+    const state = stateRef.current;
+    const scale = 2;
+    const exportCanvas = document.createElement('canvas');
+    exportCanvas.width = state.W * scale;
+    exportCanvas.height = state.H * scale;
+    const ctx = exportCanvas.getContext('2d');
+    if (!ctx) return;
+
+    // Scale context for high-res output
+    ctx.scale(scale, scale);
+
+    // Draw current canvas content
+    ctx.drawImage(canvas, 0, 0, state.W, state.H);
+
+    // Convert to blob and download
+    exportCanvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${filename}-${currentView}-${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 'image/png', 1.0);
+  }, [currentView]);
 
   function resetParticle(p: Particle, state: typeof stateRef.current) {
     // Chromatic color selection for mystical effect
@@ -221,11 +263,11 @@ export default function FractalVisualization({
     };
     resetParticle(p, state);
     return p;
-  }, []);
+  }, [getGroupColor, groups, total]);
 
   // Initialize
   useEffect(() => {
-    groupPositionsRef.current = GROUPS.map(() => ({
+    groupPositionsRef.current = groups.map(() => ({
       x: 0, y: 0, r: 0,
       targetX: 0, targetY: 0, targetR: 0,
       fromX: 0, fromY: 0, fromR: 0,
@@ -237,29 +279,32 @@ export default function FractalVisualization({
       const mode = i < 200 ? 'orbital' : i < 300 ? 'nebula' : i < 360 ? 'spark' : 'spiral';
       particlesRef.current.push(createParticle(mode));
     }
-  }, [createParticle]);
+  }, [createParticle, groups]);
 
   const computeTargetPositions = useCallback((view: ViewMode) => {
+    if (numGroups === 0 || total <= 0) {
+      return;
+    }
     const state = stateRef.current;
-    GROUPS.forEach((g, i) => {
+    groups.forEach((g, i) => {
       const gp = groupPositionsRef.current[i];
-      const proportion = g.count / TOTAL;
+      const proportion = g.count / total;
 
       if (view === 'mandala') {
-        const angle = (i / NUM_GROUPS) * TAU - Math.PI / 2;
+        const angle = (i / numGroups) * TAU - Math.PI / 2;
         const dist = state.radius * 0.65;
         gp.targetX = state.cx + Math.cos(angle) * dist;
         gp.targetY = state.cy + Math.sin(angle) * dist;
         gp.targetR = Math.max(12, Math.sqrt(proportion) * state.radius * 0.45);
       } else if (view === 'fractal') {
-        const startAngle = GROUPS.slice(0, i).reduce((s, gg) => s + (gg.count / TOTAL) * TAU, 0) - Math.PI / 2;
+        const startAngle = groups.slice(0, i).reduce((s, gg) => s + (gg.count / total) * TAU, 0) - Math.PI / 2;
         const sweep = proportion * TAU;
         const midAngle = startAngle + sweep / 2;
         gp.targetX = state.cx + Math.cos(midAngle) * state.radius * 0.6;
         gp.targetY = state.cy + Math.sin(midAngle) * state.radius * 0.6;
         gp.targetR = Math.max(10, proportion * state.radius * 1.2);
       } else if (view === 'constellation') {
-        const angle = (i / NUM_GROUPS) * TAU - Math.PI / 2;
+        const angle = (i / numGroups) * TAU - Math.PI / 2;
         const dist = state.radius * 0.4;
         gp.targetX = state.cx + Math.cos(angle) * dist;
         gp.targetY = state.cy + Math.sin(angle) * dist;
@@ -267,14 +312,14 @@ export default function FractalVisualization({
       } else if (view === 'flow') {
         const yStart = 60;
         const yRange = state.H - 120;
-        const cumPropBefore = GROUPS.slice(0, i).reduce((s, gg) => s + gg.count / TOTAL, 0);
+        const cumPropBefore = groups.slice(0, i).reduce((s, gg) => s + gg.count / total, 0);
         const yCenter = yStart + (cumPropBefore + proportion / 2) * yRange;
         gp.targetX = state.W * 0.15;
         gp.targetY = yCenter;
         gp.targetR = Math.max(8, proportion * yRange * 0.45);
       }
     });
-  }, []);
+  }, [groups, numGroups, total]);
 
   const switchView = useCallback((name: ViewMode) => {
     const state = stateRef.current;
@@ -586,7 +631,7 @@ export default function FractalVisualization({
       drawStar(c, state.cx, state.cy, state.radius * 0.2 * pulse, state.radius * 0.09 * pulse, 19, 'rgba(201,168,76,0.4)', null, 0.8);
 
       // Connecting arabesque lines from center to groups
-      GROUPS.forEach((g, i) => {
+      groups.forEach((g, i) => {
         const gp = groupPositionsRef.current[i];
         const color = getGroupColor(g, 0.2);
 
@@ -607,7 +652,7 @@ export default function FractalVisualization({
       });
 
       // Group nodes with enhanced Islamic patterns
-      GROUPS.forEach((g, i) => {
+      groups.forEach((g, i) => {
         const gp = groupPositionsRef.current[i];
         const isHighlighted = state.hoveredGroup === i || state.lockedGroup === i;
 
@@ -725,8 +770,8 @@ export default function FractalVisualization({
       // Middle ring: 13 group arcs
       const midR = state.radius * 0.6;
       let cumAngle = -Math.PI / 2;
-      GROUPS.forEach((g, i) => {
-        const sweep = (g.count / TOTAL) * TAU;
+      groups.forEach((g, i) => {
+        const sweep = (g.count / total) * TAU;
         const isHighlighted = state.hoveredGroup === i || state.lockedGroup === i;
 
         c.beginPath();
@@ -798,8 +843,8 @@ export default function FractalVisualization({
       // Chapter positions
       const allChapters: number[] = [];
       const chapterToGroups: Record<number, number[]> = {};
-      GROUPS.forEach((g, gi) => {
-        g.chapters.forEach(ch => {
+      groups.forEach((g, gi) => {
+        g.surahs.forEach(ch => {
           if (!chapterToGroups[ch]) { chapterToGroups[ch] = []; allChapters.push(ch); }
           chapterToGroups[ch].push(gi);
         });
@@ -814,10 +859,10 @@ export default function FractalVisualization({
       });
 
       // Animated connection traces
-      GROUPS.forEach((g, gi) => {
+      groups.forEach((g, gi) => {
         const gp = groupPositionsRef.current[gi];
         const isHighlighted = state.hoveredGroup === gi || state.lockedGroup === gi;
-        g.chapters.forEach((ch, ci) => {
+        g.surahs.forEach((ch, ci) => {
           const cp = chapterPositions[ch];
           if (!cp) return;
 
@@ -872,7 +917,7 @@ export default function FractalVisualization({
       });
 
       // Group nodes
-      GROUPS.forEach((g, i) => {
+      groups.forEach((g, i) => {
         const gp = groupPositionsRef.current[i];
         const isHighlighted = state.hoveredGroup === i || state.lockedGroup === i;
 
@@ -922,8 +967,8 @@ export default function FractalVisualization({
       const flowTime = state.animTime * 0.015;
 
       let cumY = yStart;
-      GROUPS.forEach((g, i) => {
-        const streamH = Math.max(4, (g.count / TOTAL) * yRange);
+      groups.forEach((g, i) => {
+        const streamH = Math.max(4, (g.count / total) * yRange);
         const streamCenterY = cumY + streamH / 2;
         const isHighlighted = state.hoveredGroup === i || state.lockedGroup === i;
 
@@ -971,7 +1016,7 @@ export default function FractalVisualization({
         c.font = '600 11px Inter, sans-serif';
         c.textAlign = 'right';
         c.textBaseline = 'middle';
-        c.fillText(g.latin, xStart - 10, streamCenterY);
+        c.fillText(g.name, xStart - 10, streamCenterY);
 
         c.fillStyle = getGroupColor(g, 0.35);
         c.font = '300 9px Inter, sans-serif';
@@ -1163,7 +1208,7 @@ export default function FractalVisualization({
 
   // Mouse handlers
   const getGroupAtPoint = useCallback((mx: number, my: number): number | null => {
-    for (let i = 0; i < NUM_GROUPS; i++) {
+    for (let i = 0; i < groupPositionsRef.current.length; i++) {
       const gp = groupPositionsRef.current[i];
       const dx = mx - gp.x;
       const dy = my - gp.y;
@@ -1184,13 +1229,14 @@ export default function FractalVisualization({
     canvas.style.cursor = hovered !== null ? 'pointer' : 'default';
 
     if (stateRef.current.lockedGroup === null && hovered !== null) {
-      setSelectedGroup(GROUPS[hovered]);
-      onGroupSelect?.(GROUPS[hovered]);
+      const group = groups[hovered] ?? null;
+      setSelectedGroup(group);
+      onGroupSelect?.(group);
     } else if (stateRef.current.lockedGroup === null && hovered === null) {
       setSelectedGroup(null);
       onGroupSelect?.(null);
     }
-  }, [getGroupAtPoint, onGroupSelect]);
+  }, [getGroupAtPoint, groups, onGroupSelect]);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     const canvas = canvasRef.current;
@@ -1203,7 +1249,7 @@ export default function FractalVisualization({
     if (clicked !== null) {
       const wasLocked = stateRef.current.lockedGroup === clicked;
       stateRef.current.lockedGroup = wasLocked ? null : clicked;
-      const group = wasLocked ? null : GROUPS[clicked];
+      const group = wasLocked ? null : (groups[clicked] ?? null);
       setSelectedGroup(group);
       onGroupSelect?.(group);
     } else {
@@ -1211,7 +1257,7 @@ export default function FractalVisualization({
       setSelectedGroup(null);
       onGroupSelect?.(null);
     }
-  }, [getGroupAtPoint, onGroupSelect]);
+  }, [getGroupAtPoint, groups, onGroupSelect]);
 
   const handleMouseLeave = useCallback(() => {
     stateRef.current.hoveredGroup = null;
@@ -1235,7 +1281,7 @@ export default function FractalVisualization({
       if (touched !== null) {
         const wasLocked = stateRef.current.lockedGroup === touched;
         stateRef.current.lockedGroup = wasLocked ? null : touched;
-        const group = wasLocked ? null : GROUPS[touched];
+        const group = wasLocked ? null : (groups[touched] ?? null);
         setSelectedGroup(group);
         onGroupSelect?.(group);
       } else {
@@ -1244,7 +1290,7 @@ export default function FractalVisualization({
         onGroupSelect?.(null);
       }
     }
-  }, [getGroupAtPoint, onGroupSelect]);
+  }, [getGroupAtPoint, groups, onGroupSelect]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (e.touches.length === 1) {
@@ -1286,13 +1332,13 @@ export default function FractalVisualization({
             <div className="w-px h-6 bg-amber-500/20 mx-1" />
             {/* Audio toggle button */}
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (audioEnabled) {
                   stopAudio();
                   setAudioEnabled(false);
                 } else {
-                  startAudio();
-                  setAudioEnabled(true);
+                  const started = await startAudio();
+                  setAudioEnabled(started);
                 }
               }}
               className={`px-3 py-2 text-sm rounded-md border transition-all flex items-center gap-1 ${
@@ -1300,7 +1346,11 @@ export default function FractalVisualization({
                   ? 'bg-cyan-500/30 border-cyan-400 text-cyan-400 shadow-lg shadow-cyan-500/20'
                   : 'bg-gray-500/10 border-gray-500/30 text-gray-400 hover:bg-gray-500/20'
               }`}
-              title={audioEnabled ? 'Disable audio reactivity' : 'Enable audio reactivity (microphone)'}
+              title={
+                audioEnabled
+                  ? 'Disable audio reactivity'
+                  : audioError ?? 'Enable audio reactivity (microphone)'
+              }
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {audioEnabled && audioActive ? (
@@ -1313,7 +1363,25 @@ export default function FractalVisualization({
               </svg>
               <span className="hidden sm:inline">{audioEnabled ? 'Audio On' : 'Audio'}</span>
             </button>
+            {/* Export button */}
+            <button
+              onClick={() => exportToPNG()}
+              className="px-3 py-2 text-sm rounded-md border transition-all flex items-center gap-1 bg-amber-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20"
+              title="Export as PNG"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span className="hidden sm:inline">Export</span>
+            </button>
           </div>
+        </div>
+      )}
+
+      {showControls && (audioError || dataError) && (
+        <div className="px-3 py-1 text-[11px] text-red-400 bg-red-950/40 border-b border-red-500/20">
+          {audioError ?? dataError}
         </div>
       )}
 
@@ -1329,6 +1397,12 @@ export default function FractalVisualization({
         />
         <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 
+        {numGroups === 0 && !dataError && (
+          <div className="absolute inset-0 flex items-center justify-center text-sm text-amber-400/70 pointer-events-none">
+            Loading visualization data...
+          </div>
+        )}
+
         {selectedGroup && (
           <div className="absolute top-4 right-4 w-72 bg-[#0a0a12]/95 border border-amber-500/25 rounded-xl p-5 backdrop-blur-xl z-10">
             <div
@@ -1343,12 +1417,12 @@ export default function FractalVisualization({
               {selectedGroup.arabic}
             </div>
             <div className="text-center font-semibold text-gray-200 mb-3">
-              {selectedGroup.latin} — Group {selectedGroup.id + 1} of 13
+              {selectedGroup.name} — Group {selectedGroup.id + 1} of {Math.max(1, numGroups)}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between border-b border-white/5 pb-2">
                 <span className="text-gray-500">Chapters</span>
-                <span className="font-semibold">{selectedGroup.chapters.join(', ')}</span>
+                <span className="font-semibold">{selectedGroup.surahs.join(', ')}</span>
               </div>
               <div className="flex justify-between border-b border-white/5 pb-2">
                 <span className="text-gray-500">Letter Count</span>
@@ -1360,7 +1434,9 @@ export default function FractalVisualization({
               </div>
               <div className="flex justify-between border-b border-white/5 pb-2">
                 <span className="text-gray-500">Proportion</span>
-                <span className="font-semibold">{((selectedGroup.count / TOTAL) * 100).toFixed(1)}%</span>
+                <span className="font-semibold">
+                  {total > 0 ? ((selectedGroup.count / total) * 100).toFixed(1) : '0.0'}%
+                </span>
               </div>
               <div className="text-center pt-2">
                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${

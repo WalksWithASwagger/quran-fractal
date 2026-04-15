@@ -10,7 +10,7 @@
  * standalone views without modifying the monolithic component.
  */
 
-import type { LetterGroup } from '@/lib/groups';
+import type { LetterGroup } from '@/lib/types';
 
 export interface ViewState {
   animTime: number;

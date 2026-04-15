@@ -41,7 +41,20 @@ quran-fractal verify
 Running the verifier produces:
 
 - `fractal_edition.txt`: assembled text plus the long-form verification narrative
-- `build/verification-summary.json`: structured summary intended for future web/docs consumers
+- `build/verification-summary.json`: structured verification summary
+- `web/public/data/quran-data.json`: structured dataset for the web explorer
+
+## Web App
+
+The repository includes a Next.js research explorer in `web/`.
+
+```bash
+cd web
+npm ci
+npm run dev
+```
+
+Then open `http://localhost:3000` and use `/explore` for verse/group analysis.
 
 ## Project Layout
 

@@ -23,11 +23,12 @@ Transform the 7430 Project from a single Python verification script into a compr
 - [ ] Write plain-language explainer: "What is 39,349 = 19² × P(29)?"
 
 ### 1.2 Technical Infrastructure
-- [ ] Add CI/CD pipeline (GitHub Actions) to run `verify.py` on every commit
-- [ ] Add automated testing with pytest
+- [x] Add CI/CD pipeline (GitHub Actions) to run verification and builds on every commit
+- [x] Add automated testing with pytest
 - [ ] Add SHA-256 hash verification as automated check
 - [ ] Set up GitHub Pages for project website
-- [ ] Configure linting (ruff) and pre-commit hooks
+- [x] Configure linting (ruff/eslint)
+- [ ] Add pre-commit hooks
 
 ### 1.3 Visualization v1
 - [x] Build interactive fractal Islamic geometry visualization
@@ -64,10 +65,10 @@ Transform the 7430 Project from a single Python verification script into a compr
 ## Phase 3: Interactive Explorer (Month 3–6)
 
 ### 3.1 Web Application
-- [ ] Build full web app (Next.js or similar)
-- [ ] Verse-by-verse explorer with highlighted Muqatta'at letters
-- [ ] Side-by-side Arabic text with letter counts updating live
-- [ ] Group selector — click a group, see all its chapters and counts
+- [x] Build full web app (Next.js)
+- [x] Verse-by-verse explorer with highlighted Muqatta'at letters
+- [x] Side-by-side Arabic text with letter counts updating live
+- [x] Group selector — click a group, see all its chapters and counts
 - [ ] "Count along" mode — user manually verifies counts in-browser
 
 ### 3.2 Visualization Suite

@@ -51,7 +51,7 @@ export function useAudioAnalyzer() {
   const smoothedDataRef = useRef<AudioData>({ ...DEFAULT_AUDIO_DATA });
   const smoothingFactor = 0.3; // Higher = more responsive, lower = smoother
 
-  const start = useCallback(async () => {
+  const start = useCallback(async (): Promise<boolean> => {
     try {
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -90,6 +90,7 @@ export function useAudioAnalyzer() {
         hasPermission: true,
         error: null,
       });
+      return true;
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error';
       setState({
@@ -97,6 +98,7 @@ export function useAudioAnalyzer() {
         hasPermission: false,
         error: `Microphone access denied: ${message}`,
       });
+      return false;
     }
   }, []);
 

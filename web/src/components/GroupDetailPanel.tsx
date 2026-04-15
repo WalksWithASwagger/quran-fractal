@@ -1,11 +1,27 @@
 'use client';
 
+import { useState } from 'react';
 import { useGroup } from '@/stores/quran-data';
 import { useResearchStore } from '@/stores/research';
+import { useCountAlongStore } from '@/stores/count-along';
+import CountAlongMode from './CountAlongMode';
 
 export default function GroupDetailPanel() {
+  const [showCountAlong, setShowCountAlong] = useState(false);
   const { selectedGroupId, selectSurah, selectGroup } = useResearchStore();
   const group = useGroup(selectedGroupId ?? -1);
+  const startCountAlong = useCountAlongStore((s) => s.start);
+
+  const handleStartCountAlong = () => {
+    if (group) {
+      startCountAlong(group.id);
+      setShowCountAlong(true);
+    }
+  };
+
+  const handleCloseCountAlong = () => {
+    setShowCountAlong(false);
+  };
 
   if (!group) {
     return (
@@ -28,10 +44,9 @@ export default function GroupDetailPanel() {
           &times;
         </button>
         <div
-          className="text-4xl mb-1"
+          className="text-4xl mb-1 font-arabic"
           dir="rtl"
           style={{
-            fontFamily: 'Amiri, serif',
             color: tierColor ? '#c9a84c' : '#60f5e0',
             textShadow: tierColor
               ? '0 0 20px rgba(201,168,76,0.4)'
@@ -114,6 +129,23 @@ export default function GroupDetailPanel() {
             : '✗ Verification failed'}
         </span>
       </div>
+
+      {/* Count Along button */}
+      <button
+        onClick={handleStartCountAlong}
+        className="w-full mt-2 px-4 py-2.5 bg-cyan-500/15 border border-cyan-500/30 rounded-lg text-cyan-300 hover:bg-cyan-500/25 transition-all flex items-center justify-center gap-2 text-sm font-medium"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        Count Along Mode
+      </button>
+
+      {/* Count Along modal */}
+      {showCountAlong && group && (
+        <CountAlongMode groupId={group.id} onClose={handleCloseCountAlong} />
+      )}
     </div>
   );
 }

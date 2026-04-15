@@ -91,9 +91,8 @@ function VerseRow({
 
         {/* Verse text */}
         <div
-          className="flex-1 text-lg leading-loose text-gray-200"
+          className="flex-1 text-lg leading-loose text-gray-200 font-arabic"
           dir="rtl"
-          style={{ fontFamily: 'Amiri, serif' }}
         >
           <HighlightedText
             text={verse.t}

@@ -1,14 +1,15 @@
 # API Contract
 
-This project does not ship a web app yet, but it now emits a stable JSON artifact for future web and docs consumers.
+The project ships a Next.js research explorer and emits stable JSON artifacts consumed by that app.
 
-## Artifact
+## Artifacts
 
-Default path:
+Default output paths:
 
-`build/verification-summary.json`
+- `build/verification-summary.json` (verification summary + source hashes)
+- `web/public/data/quran-data.json` (full explorer dataset)
 
-## Top-Level Shape
+## Verification Summary Shape
 
 ```json
 {
@@ -30,7 +31,16 @@ Default path:
 }
 ```
 
-## Group Object
+## Web Explorer Data Shape
+
+`web/public/data/quran-data.json` contains:
+
+- `groups`: display metadata, per-group totals, and per-surah breakdowns
+- `surahs`: surah index data for browsing/filtering
+- `verses`: verse text, word counts, and optional per-group letter counts (`lc`)
+- `gradient`: aggregate totals for book-level metrics
+
+## Group Fields
 
 Each group entry contains:
 
@@ -47,12 +57,12 @@ Each group entry contains:
 
 ## Intended Consumers
 
-- a static results site
-- a thin API layer
-- frontend visualizations that must not re-implement the counting logic
+- the `/explore` web app
+- static or API-backed result sites
+- external analysis clients that should not re-implement counting rules
 
 ## Guidance For A Future Web Layer
 
 - Treat the Python package as the source of truth.
-- Read JSON artifacts or call the package through a thin API.
+- Read JSON artifacts or call the package through a thin API wrapper.
 - Do not duplicate the verification algorithm in JavaScript.

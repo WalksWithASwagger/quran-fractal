@@ -8,7 +8,7 @@ import VerseReader from '@/components/VerseReader';
 import GroupDetailPanel from '@/components/GroupDetailPanel';
 import VizConfigPanel from '@/components/VizConfigPanel';
 import { useResearchStore } from '@/stores/research';
-import type { LetterGroup } from '@/lib/groups';
+import type { LetterGroup } from '@/lib/types';
 
 function ExploreLayout() {
   const [vizCollapsed, setVizCollapsed] = useState(false);
@@ -17,38 +17,38 @@ function ExploreLayout() {
   const handleGroupSelect = useCallback(
     (group: LetterGroup | null) => {
       selectGroup(group?.id ?? null);
-      if (group && group.chapters.length > 0) {
-        selectSurah(group.chapters[0]);
+      if (group && group.surahs.length > 0) {
+        selectSurah(group.surahs[0]);
       }
     },
     [selectGroup, selectSurah]
   );
 
   return (
-    <div className="flex h-screen bg-[#0a0a12] text-gray-200 overflow-hidden">
+    <div className="flex h-screen flex-col lg:flex-row bg-[#0a0a12] text-gray-200 overflow-hidden">
       {/* Left: Surah browser */}
-      <div className="w-56 flex-shrink-0 overflow-hidden">
+      <div className="h-48 lg:h-auto lg:w-56 flex-shrink-0 overflow-hidden border-b lg:border-b-0 border-amber-500/10">
         <SurahBrowser />
       </div>
 
       {/* Center: Verse reader */}
-      <div className="flex-1 flex flex-col min-w-0 border-x border-amber-500/10">
+      <div className="flex-1 min-h-0 flex flex-col min-w-0 lg:border-x border-amber-500/10">
         <VerseReader />
       </div>
 
       {/* Right: Viz + Group detail */}
       <div
-        className={`flex-shrink-0 flex flex-col border-l border-amber-500/10 transition-all ${
-          vizCollapsed ? 'w-10' : 'w-[420px]'
+        className={`flex-shrink-0 flex flex-col border-t lg:border-t-0 lg:border-l border-amber-500/10 transition-all ${
+          vizCollapsed ? 'h-10 lg:h-auto lg:w-10' : 'h-[45vh] lg:h-auto lg:w-[420px]'
         }`}
       >
         {vizCollapsed ? (
           <button
             onClick={() => setVizCollapsed(false)}
-            className="h-full flex items-center justify-center text-amber-400/50 hover:text-amber-400 transition-colors"
+            className="h-full w-full flex items-center justify-center text-amber-400/50 hover:text-amber-400 transition-colors"
             title="Expand visualization"
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4 lg:rotate-0 rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M15 18l-6-6 6-6" />
             </svg>
           </button>
@@ -79,8 +79,7 @@ function ExploreLayout() {
               ) : (
                 <div className="p-6 text-center text-gray-600 text-sm space-y-3">
                   <div
-                    className="text-3xl text-amber-400/20"
-                    style={{ fontFamily: 'Amiri, serif' }}
+                    className="text-3xl text-amber-400/20 font-arabic"
                   >
                     ١٩
                   </div>
